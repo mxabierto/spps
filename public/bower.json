@@ -1,0 +1,17 @@
+{
+  "name": "spps_dashboard",
+  "homepage": "https://github.com/karennz23/spps",
+  "authors": [
+    "Mario Torres <mario291187@gmail.com>"
+  ],
+  "description": "Tablero de visualización",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
