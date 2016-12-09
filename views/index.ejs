@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
+
+
+<!-- PIDOS-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,10 +32,45 @@
 
 
 <div class="container">
-    <h1>DataLab SPPS dashboard</h1>
-    <div class="well">
-        <div id="series_chart_div" style="width: 900px; height: 500px;"></div>
-    </div>
+    <h1>Bienvenido al catálogo de indicadores de los Programas de Acción Específicos</h1>
+<div class="row">
+    <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
+        <select name="UA" id="unidad" class="form-control">
+            <option value=0>-Unidad Administrativa-</option>
+            <%for( var i=0;i<unidades.length;i++){%>
+            <option value="<%= unidades[i].key%>"><%= unidades[i].value%></option>
+            <%}%>
+        </select></div>
+    <div class="col-sm-4"><!-- Elección del PAE-->
+        <select name="PAE" id="pae" class="form-control">
+            <option value=0>-Programa de Acción Específico-</option>
+            <option value=1>Sistema Nacional de Vigilancia Epidemiológica</option>
+        </select></div>
+    <div class="col-sm-4"><!-- Elección de indicador-->
+        <select name="IND" id="indicador" class="form-control">
+            <option value=0>-Indicador-</option>
+            <option value=1>Índice de desempeño de la Red Nacional de Laboratorios de Salud Pública</option>
+        </select></div>
+</div>
+
+
+
+
+</div>
+<div class="container">
+    <h1>Espacio para el mapa</h1>
+</div>
+
+<div class="container">
+    <h1>Ficha técnica</h1>
+</div>
+
+<div class="container">
+    <h1>Indicadores por estado</h1>
+</div>
+
+<div class="container">
+    <h1>Datos</h1>
 </div>
 
 <dgm-footer></dgm-footer>
@@ -41,39 +79,8 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawSeriesChart);
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
-    function drawSeriesChart() {
-
-        var data = google.visualization.arrayToDataTable([
-            ['ID', 'Life Expectancy', 'Fertility Rate', 'Region',     'Population'],
-            ['CAN',    80.66,              1.67,      'North America',  33739900],
-            ['DEU',    79.84,              1.36,      'Europe',         81902307],
-            ['DNK',    78.6,               1.84,      'Europe',         5523095],
-            ['EGY',    72.73,              2.78,      'Middle East',    79716203],
-            ['GBR',    80.05,              2,         'Europe',         61801570],
-            ['IRN',    72.49,              1.7,       'Middle East',    73137148],
-            ['IRQ',    68.09,              4.77,      'Middle East',    31090763],
-            ['ISR',    81.55,              2.96,      'Middle East',    7485600],
-            ['RUS',    68.6,               1.54,      'Europe',         141850000],
-            ['USA',    78.09,              2.05,      'North America',  307007000]
-        ]);
-
-        var options = {
-            title: 'Correlation between life expectancy, fertility rate ' +
-            'and population of some world countries (2010)',
-            hAxis: {title: 'Life Expectancy'},
-            vAxis: {title: 'Fertility Rate'},
-            bubble: {textStyle: {fontSize: 11}}
-        };
-
-        var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
-        chart.draw(data, options);
-    }
-</script>
 
 </body>
 </html>
