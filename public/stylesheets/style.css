@@ -1,0 +1,28 @@
+.bgimg                          { margin-bottom: 0; height: 400px; background-image: url('/img/banner.jpeg'); background-size: cover; }
+.bgimg h2                       { margin-bottom: 30px; }
+.bgimg h2 > span                { display: block; font-weight: 400; }
+
+.panel                          { border:none; }
+.well                           { border: none; }
+
+
+@media only screen
+and (min-device-width: 300px)
+and (max-device-width: 736px){
+    .bgimg { height: 250px; }
+    .bgimg h2 { font-size: 20px; margin-bottom: 10px}
+    .bgimg h4 { font-size: 12px;}
+    .bgimg .stat { font-size: 16px }
+    .bgimg {background-size: 500px 200px}
+
+
+    .statistics h1 {font-size: 16px;}
+    .statistics p { font-size: 14px;}
+
+    .stages .stages-widget p {font-size: 14px}
+    .stages .stages-widget .content { font-size: 14px; padding-bottom: 25px}
+
+    .stages .stages-widget img {width: 25px}
+    .stages h1 {font-size: 16px}
+
+}

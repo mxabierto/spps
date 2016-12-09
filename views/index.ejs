@@ -14,6 +14,7 @@
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
     <link href="/stylesheets/main.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
 
     <link rel="import" href="/bower_components/polymer/polymer.html">
     <link rel="import" href="/bower_components/dgm-navbar/dgm-navbar.html">
@@ -30,35 +31,55 @@
 
 <dgm-navbar></dgm-navbar>
 
+<div class="bgimg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-center" id="icono_con"><img src="/img/logo_salud.png" style="width: 350px; padding-top: 75px"></p>
+            </div>
+        </div>
+        <div id="datos_duros">
+            <div class="row">
+                <div class="col-sm-12 widget">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container">
     <h1>Bienvenido al catálogo de indicadores de los Programas de Acción Específicos</h1>
-<div class="row">
-    <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
-        <select name="UA" id="unidad" class="form-control">
-            <option value=0>-Unidad Administrativa-</option>
-            <%for( var i=0;i<unidades.length;i++){%>
-            <option value="<%= unidades[i].key%>"><%= unidades[i].value%></option>
-            <%}%>
-        </select></div>
-    <div class="col-sm-4"><!-- Elección del PAE-->
-        <select name="PAE" id="pae" class="form-control">
-            <option value=0>-Programa de Acción Específico-</option>
-            <option value=1>Sistema Nacional de Vigilancia Epidemiológica</option>
-        </select></div>
-    <div class="col-sm-4"><!-- Elección de indicador-->
-        <select name="IND" id="indicador" class="form-control">
-            <option value=0>-Indicador-</option>
-            <option value=1>Índice de desempeño de la Red Nacional de Laboratorios de Salud Pública</option>
-        </select></div>
-</div>
-
-
-
-
+    <div class="row">
+        <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
+            <label>Selecciona una unidad administrativa</label>
+            <select name="UA" id="unidad" class="form-control">
+                <option value=0>-Unidad Administrativa-</option>
+                <%for( var i=0;i<unidades.length;i++){%>
+                <option value="<%= unidades[i].key%>"><%= unidades[i].value%></option>
+                <%}%>
+            </select>
+        </div>
+        <div class="col-sm-4"><!-- Elección del PAE-->
+            <label>Selecciona un PAE</label>
+            <select name="PAE" id="pae" class="form-control">
+                <option value=0>-Programa de Acción Específico-</option>
+                <option value=1>Sistema Nacional de Vigilancia Epidemiológica</option>
+            </select>
+        </div>
+        <div class="col-sm-4"><!-- Elección de indicador-->
+            <label>Selecciona un indicador</label>
+            <select name="IND" id="indicador" class="form-control">
+                <option value=0>-Indicador-</option>
+                <option value=1>Índice de desempeño de la Red Nacional de Laboratorios de Salud Pública</option>
+            </select>
+        </div>
+    </div>
 </div>
 <div class="container">
-    <h1>Espacio para el mapa</h1>
+    <br>
+    <iframe width='100%' height='520' frameborder='0' src='https://carlosccorr.carto.com/viz/b10d786e-b003-11e6-adc5-0e233c30368f/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 </div>
 
 <div class="container">
@@ -69,9 +90,38 @@
     <h1>Indicadores por estado</h1>
 </div>
 
-<div class="container">
-    <h1>Datos</h1>
+<div class="container statistics">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Datos</h1>
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <!--<th width="50%">Institución</th>-->
+                        <th width="30%">Institución</th>
+                        <th width="30%">Formato</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="api">
+
+                        <td>Indicadores objetivo 1</td>
+                        <td>ODS</td>
+                        <td>
+                            <span class="label" data-format="csv">CSV</span>
+                            <span class="label" data-format="xlsx">XLS</span>
+                            <span class="label" data-format="pdf">PDF</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <dgm-footer></dgm-footer>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
