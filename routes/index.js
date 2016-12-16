@@ -18,7 +18,7 @@ var db = pgp(cn);
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  db.manyOrNone('select distinct(unidad) from pae',[]).then(function ( data ) {
+  db.manyOrNone('select nombre from unidad',[]).then(function ( data ) {
 
       res.render('index', { title: 'Tablero SPPS',unidades: data });
 

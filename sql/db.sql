@@ -10,6 +10,23 @@ grant all privileges on database karen to mtorres;
 \c karen;
 set role mtorres;
 
+
+drop table if exists unidad cascade;
+create table unidad (
+id serial primary key,
+nombre text
+);
+
+insert into unidad("nombre") values
+('CENAPRECE'),
+('CENSIA'),
+('CENSIDA'),
+('CNEGSR'),
+('DGE'),
+('DGPS'),
+('STCONAPRA'),
+('STCONSAME');
+
 drop table if exists pae cascade;
 create table pae (
     id integer primary key,
