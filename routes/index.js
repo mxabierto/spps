@@ -40,22 +40,29 @@ router.post('/paes/', function (req,res ) {
 router.post('/fichas/',function (req, res) {
     var id_pae = req.body.id_pae;
     console.log('id_pae ', id_pae);
-    db.manyOrNone ('select id, nombre from ficha where id_pae = $1 ', [id_pae ]).then(function (data) {
-        res.render('fichas', { fichas: data});
-    }).catch(function (error) {
-        console.log(error);
-    })
+
+
+        db.manyOrNone('select id, nombre from ficha where id_pae = $1 ', [id_pae]).then(function (data) {
+            res.render('fichas', {fichas: data});
+        }).catch(function (error) {
+            console.log(error);
+        });
 
 });
 
 
 router.post('/ficha/', function (req, res ) {
     var id_ficha = req.body.id_ficha;
-    db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
-        res.render('ficha', { ficha  : data })
-    }).catch(function (error) {
-        console.log(error);
-    });
+
+    if (id_ficha != '' && id_ficha != null) {
+        db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
+            res.render('ficha', { ficha  : data })
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }else {
+        res.send('<strong>Seleccione un indicador</strong>');
+    }
 });
 
 module.exports = router;
