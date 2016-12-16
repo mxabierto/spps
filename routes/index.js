@@ -13,18 +13,49 @@ var cn = {
 
 var db = pgp(cn);
 
-//var unidades=[{key:1,value:"CENAPRECE"},{key:2,value:"CENSIA"},{key:3,value:"CENSIDA"},{key:4,value:"CNEGSR"},{key:5,value:"DGE"},{key:6,value:"DGPS"},{key:7,value:"STCONAPRA"},{key:8,value:"STCONSAME"}]
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  db.manyOrNone('select nombre from unidad',[]).then(function ( data ) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
-      res.render('index', { title: 'Tablero SPPS',unidades: data });
+        res.render('index', { title: 'Tablero SPPS',unidades: data });
 
-  }).catch(function (error) {
-      console.log(error);
-  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
+
+router.post('/paes/', function (req,res ) {
+    var unidad = req.body.unidad;
+    console.log(unidad);
+    db.manyOrNone('select * from pae where unidad = $1',[unidad]).then(function (data) {
+        res.render('paes', {paes: data});
+    }).catch(function (error) {
+        console.log(error);
+    })
+});
+
+
+router.post('/fichas/',function (req, res) {
+    var id_pae = req.body.id_pae;
+    console.log('id_pae ', id_pae);
+    db.manyOrNone ('select id, nombre from ficha where id_pae = $1 ', [id_pae ]).then(function (data) {
+        res.render('fichas', { fichas: data});
+    }).catch(function (error) {
+        console.log(error);
+    })
+
+});
+
+
+router.post('/ficha/', function (req, res ) {
+    var id_ficha = req.body.id_ficha;
+    db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
+        res.render('ficha', { ficha  : data })
+    }).catch(function (error) {
+        console.log(error);
+    });
 });
 
 module.exports = router;

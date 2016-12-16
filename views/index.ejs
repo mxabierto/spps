@@ -57,23 +57,23 @@
             <select name="UA" id="unidad" class="form-control">
                 <option value=0>-Unidad Administrativa-</option>
                 <%for( var i=0;i<unidades.length;i++){%>
-                <option value="<%= unidades[i].id%>"><%= unidades[i].nombre%></option>
+                <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
                 <%}%>
             </select>
         </div>
         <div class="col-sm-4"><!-- Elección del PAE-->
             <label>Selecciona un PAE</label>
-            <select name="PAE" id="pae" class="form-control">
-                <option value=0>-Programa de Acción Específico-</option>
-                <option value=1>Sistema Nacional de Vigilancia Epidemiológica</option>
+            <div id = 'div_pae'>
+            <select name="PAE" class="form-control">
             </select>
+            </div>
         </div>
         <div class="col-sm-4"><!-- Elección de indicador-->
             <label>Selecciona un indicador</label>
-            <select name="IND" id="indicador" class="form-control">
-                <option value=0>-Indicador-</option>
-                <option value=1>Índice de desempeño de la Red Nacional de Laboratorios de Salud Pública</option>
+            <div id ="div_indicador">
+            <select name="IND" class="form-control">
             </select>
+            </div>
         </div>
     </div>
 </div>
@@ -84,6 +84,7 @@
 
 <div class="container">
     <h1>Ficha técnica</h1>
+    <div id ="ficha"></div>
 </div>
 
 <div class="container">
@@ -130,6 +131,7 @@
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="/javascripts/main.js"></script>
 
 
 </body>
