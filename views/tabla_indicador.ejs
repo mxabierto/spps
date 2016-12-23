@@ -1,12 +1,38 @@
+
+<% function color( val ) {
+    switch ( val ){
+        case 0:
+            return '#a65fc6';
+            break;
+        case 1:
+            return '#ff6363 ';
+            break;
+        case 2:
+            return '#fff547';
+            break;
+        case 3:
+            return '#00d667';
+            break;
+        case 4:
+            return '#ffb351';
+            break;
+        case 5:
+            return '#18f7b0';
+            break;
+    }
+
+    return 'grey';
+}%>
+
 <table class="table">
 
     <thead>
     <tr>
         <th>No.</th>
         <th>Entidad</th>
-        <th>Valor del indicador</th>
         <th>Numerador </th>
         <th>Denominador</th>
+        <th>Valor del indicador</th>
         <th>Semaforo</th>
     </tr>
     </thead>
@@ -17,10 +43,10 @@
     <tr>
         <td><%= i+1 %></td>
         <td><%= datos[i].nombre %></td>
+        <td></td>
+        <td></td>
         <td><%= datos[i].valor%></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td> <span class="circle" style="background-color: <%- color( datos[i].color )%>"></span> </td>
     </tr>
     <%}%>
 
