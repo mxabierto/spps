@@ -3,13 +3,13 @@
 drop database if exists karen;
 create database karen;
 
-drop user if exists mtorres;
+/*drop user if exists mtorres;
 create user mtorres with password 'test';
 grant all privileges on database karen to mtorres;
 
 \c karen;
 set role mtorres;
-
+*/
 
 drop table if exists unidad cascade;
 create table unidad (
@@ -20,12 +20,14 @@ nombre text
 insert into unidad("nombre") values
 ('CENAPRECE'),
 ('CENSIA'),
-('CENSIDA'),
 ('CNEGSR'),
 ('DGE'),
-('DGPS'),
+('DGPS');
+/*
+('CENSIDA'),
 ('STCONAPRA'),
-('STCONSAME');
+('STCONSAME'),
+*/
 
 drop table if exists pae cascade;
 create table pae (

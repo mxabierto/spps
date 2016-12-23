@@ -7,10 +7,10 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'mtorres',
-    password: 'test'
+    user: 'postgres',
+    password: 'pio'
 };
-
+/*AQUÏ BLASSO JUGANDO AL PROGRAMMER*/
 var db = pgp(cn);
 
 /* GET home page. */
@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
-        res.render('index', { title: 'Tablero SPPS',unidades: data });
+        res.render('index', { title: 'MIIPPS',unidades: data });
 
     }).catch(function (error) {
         console.log(error);
