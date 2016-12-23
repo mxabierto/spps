@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'mtorres',
-    password: 'tester'
+    user: 'postgres',
+    password: 'pio'
 };
 /*AQUÏ BLASSO JUGANDO AL PROGRAMMER*/
 var db = pgp(cn);
