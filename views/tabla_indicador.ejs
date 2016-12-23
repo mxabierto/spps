@@ -1,33 +1,28 @@
 <table class="table">
+
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Entidad</th>
+        <th>Valor del indicador</th>
+        <th>Numerador </th>
+        <th>Denominador</th>
+        <th>Semaforo</th>
+    </tr>
+    </thead>
+
     <tbody>
+    <% for ( var i=0; i< datos.length; i++){%>
+
     <tr>
-        <td><strong>Indicador</strong></td>
-        <td><%= ficha.nombre %></td>
+        <td><%= i+1 %></td>
+        <td><%= datos[i].nombre %></td>
+        <td><%= datos[i].valor%></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
-    <tr>
-        <td><strong>Objetivo del PAE</strong></td>
-        <td> <%= ficha.objetivo %></td>
-    </tr>
-    <tr>
-        <td><strong>Descripción</strong></td>
-        <td><%= ficha.descripcion %></td>
-    </tr>
-    <tr>
-        <td><strong>Observaciones</strong></td>
-        <td> <%= ficha.observaciones %></td>
-    </tr>
-    <tr>
-        <td><strong>Periodicidad</strong></td>
-        <td><%= ficha.periodicidad %></td>
-    </tr>
-    <tr>
-        <td><strong>Fuente</strong></td>
-        <td><%= ficha.fuente %></td>
-    </tr>
-    <tr>
-        <td><strong>Referencias</strong></td>
-        <td><%= ficha.referencia %></td>
-    </tr>
+    <%}%>
 
     </tbody>
 </table>

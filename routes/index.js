@@ -69,4 +69,22 @@ router.post('/ficha/', function (req, res ) {
     }
 });
 
+router.post('/tabla-indicador/', function(req, res){
+    var id_ficha = req.body.id_ficha;
+    if (id_ficha != '' && id_ficha != null) {
+        db.manyOrNone ('select * from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1',[ id_ficha ]).then(function(data){
+            if (data){
+                res.render('tabla_indicador', { datos: data }  );
+            }else{
+                res.send('<strong>Seleccione un indicador</strong>');
+            }
+        }).catch(function(error){
+            console.log(error);
+        });
+    }else {
+        res.send('<strong>Seleccione un indicador</strong>');
+    }
+
+});
+
 module.exports = router;
