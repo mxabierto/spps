@@ -8,7 +8,7 @@ var cn = {
     //port: 5433,
     database: 'karen',
     user: 'mtorres',
-    password: 'test'
+    password: 'tester'
 };
 /*AQUÏ BLASSO JUGANDO AL PROGRAMMER*/
 var db = pgp(cn);
