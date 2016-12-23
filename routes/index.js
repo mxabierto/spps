@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'postgres',
-    password: 'pio'
+    user: 'mtorres',
+    password: 'test'
 };
 /*AQUÏ BLASSO JUGANDO AL PROGRAMMER*/
 var db = pgp(cn);
@@ -56,7 +56,11 @@ router.post('/ficha/', function (req, res ) {
 
     if (id_ficha != '' && id_ficha != null) {
         db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
-            res.render('ficha', { ficha  : data })
+            if (data) {
+                res.render('ficha', {ficha: data});
+            }else{
+                res.send('<strong>Seleccione un indicador</strong>');
+            }
         }).catch(function (error) {
             console.log(error);
         });
