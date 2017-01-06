@@ -118,7 +118,7 @@ router.get('/signout', function(req, res) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', {title: 'Tablero SPPS', message: ''});
+    res.render('index', {title: 'Tablero SPPS', message: req.flash('message') });
 });
 
 

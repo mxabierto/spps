@@ -10,6 +10,15 @@ grant all privileges on database karen to mtorres;
 \c karen;
 set role mtorres;
 
+drop table if exists usuarios cascade;
+create table usuarios (
+id serial primary key,
+usuario text,
+contrasena text,
+nombres text,
+apellido_paterno text,
+apellido_materno text
+);
 
 drop table if exists unidad cascade;
 create table unidad (
