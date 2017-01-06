@@ -122,7 +122,7 @@ router.get('/', function (req, res) {
 });
 
 
-router.get('/tablero', function(req, res, next) {
+router.get('/tablero', isAuthenticated, function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
