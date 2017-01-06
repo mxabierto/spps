@@ -14,11 +14,16 @@ var cn = {
 var db = pgp(cn);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res) {
+    res.render('index', {title: 'Tablero SPPS', message: ''});
+});
+
+
+router.get('/tablero', function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
-        res.render('index', { title: 'MIIPPS',unidades: data });
+        res.render('tablero', { title: 'MIIPPS',unidades: data });
 
     }).catch(function (error) {
         console.log(error);
@@ -95,5 +100,8 @@ router.post('/anios',function (req, res) {
 
     res.render('anios');
 });
+
+
+
 
 module.exports = router;

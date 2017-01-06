@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title><%= title %></title>
+
+    <!-- Bootstrap -->
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+    <link href="/stylesheets/main.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
+
+
+    <link rel="import" href="/bower_components/polymer/polymer.html">
+    <link rel="import" href="/bower_components/dgm-navbar/dgm-navbar.html">
+    <link rel="import" href="/bower_components/dgm-footer/dgm-footer.html">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        .circle { display: inline-block; width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; position: relative; top: 2.5px; }
+    </style>
+
+    <style>
+        html, body, #map {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+</head>
+<body>
+
+<dgm-navbar></dgm-navbar>
+
+<div class="bgimg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-center" id="icono_con"><img src="/img/logo_salud.png" style="width: 350px; padding-top: 75px"></p>
+            </div>
+        </div>
+        <div id="datos_duros">
+            <div class="row">
+                <div class="col-sm-12 widget">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <h1 align="center">Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
+    <div class="row">
+        <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
+            <label>Selecciona una unidad administrativa</label>
+            <select name="UA" id="unidad" class="form-control">
+                <option value=0>-Unidad Administrativa-</option>
+                <%for( var i=0;i<unidades.length;i++){%>
+                <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
+                <%}%>
+            </select>
+        </div>
+        <div class="col-sm-4"><!-- Elección del PAE-->
+            <label>Selecciona un PAE</label>
+            <div id = 'div_pae'>
+                <select name="PAE" class="form-control">
+                    <option value=0>-Programa de Acción Específico-</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-4"><!-- Elección de indicador-->
+            <label>Selecciona un indicador</label>
+            <div id ="div_indicador">
+                <select name="IND" class="form-control">
+                    <option value=0>-Indicador-</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <br>
+    <iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/fcfe436a-d3a4-11e6-b2a7-0e98b61680bf/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+    <!--https://karennz23.carto.com/builder/ecb0c4d6-d3d3-11e6-ba65-0ee66e2c9693/embed-->
+
+    <div style="text-align: center">
+        <% include anios.ejs %>
+    </div>
+
+</div>
+
+<div class="container">
+    <h1>Ficha técnica</h1>
+    <div id ="ficha"></div>
+</div>
+
+<div class="container">
+    <h1>Indicadores por estado</h1>
+    <div id="tabla_indicador"></div>
+</div>
+
+<div class="container statistics">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Datos</h1>
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <!--<th width="50%">Institución</th>-->
+                        <th width="30%">Institución</th>
+                        <th width="30%">Formato</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="api">
+
+                        <td>Indicadores objetivo 1</td>
+                        <td>ODS</td>
+                        <td>
+                            <span class="label" data-format="csv">CSV</span>
+                            <span class="label" data-format="xlsx">XLS</span>
+                            <span class="label" data-format="pdf">PDF</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<dgm-footer></dgm-footer>
+
+
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="/javascripts/main.js"></script>
+
+
+</body>
+</html>
