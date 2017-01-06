@@ -102,6 +102,20 @@ var createHash = function(password){
 };
 
 
+/* Handle Login POST */
+router.post('/login', passport.authenticate('login', {
+    successRedirect: '/principal',
+    failureRedirect: '/',
+    failureFlash : true
+}));
+
+/* Handle Logout */
+router.get('/signout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+
 /* GET home page. */
 router.get('/', function (req, res) {
     res.render('index', {title: 'Tablero SPPS', message: ''});
