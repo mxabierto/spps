@@ -89,4 +89,11 @@ router.post('/tabla-indicador/', function(req, res){
 
 });
 
+router.post('/anios',function (req, res) {
+    /*db.manyOrNone('').then(function () {
+    });*/
+
+    res.render('anios');
+});
+
 module.exports = router;
