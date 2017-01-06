@@ -17,7 +17,8 @@ usuario text,
 contrasena text,
 nombres text,
 apellido_paterno text,
-apellido_materno text
+apellido_materno text,
+email text
 );
 
 drop table if exists unidad cascade;

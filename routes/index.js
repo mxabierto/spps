@@ -104,7 +104,7 @@ var createHash = function(password){
 
 /* Handle Login POST */
 router.post('/login', passport.authenticate('login', {
-    successRedirect: '/principal',
+    successRedirect: '/tablero',
     failureRedirect: '/',
     failureFlash : true
 }));
