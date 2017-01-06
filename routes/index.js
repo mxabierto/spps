@@ -10,7 +10,7 @@ var cn = {
     user: 'postgres',
     password: 'pio'
 };
-/*AQUÏ BLASSO JUGANDO AL PROGRAMMER*/
+
 var db = pgp(cn);
 
 /* GET home page. */
