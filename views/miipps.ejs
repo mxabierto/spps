@@ -81,16 +81,23 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <br>
-    <iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/ecb0c4d6-d3d3-11e6-ba65-0ee66e2c9693/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+</div>
+
+<div id="map"></div>
+<!--
+<div class="container">
+    <br>
+    <iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 
 
     <div style="text-align: center">
-        <% include anios.ejs %>
+      <% include anios.ejs %>
     </div>
 
-</div>
+</div>-->
 
 <div class="container">
     <h1>Ficha técnica</h1>
@@ -139,6 +146,45 @@
 
 
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+
+
+<!-- include cartodb.js library -->
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+
+
+
+<script>
+    function main() {
+        cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/731e06d0-d629-11e6-902c-0ecd1babdde5/viz.json', {
+            shareable: true,
+            title: false,
+            description: true,
+            search: true,
+            tiles_loader: true,
+            center_lat: 24,
+            center_lon: -99,
+            zoom: 5
+        })
+            .done(function(vis, layers) {
+                // layer 0 is the base layer, layer 1 is cartodb layer
+                // setInteraction is disabled by default
+                layers[1].setInteraction(true);
+                layers[1].on('featureOver', function(e, latlng, pos, data) {
+                    cartodb.log.log(e, latlng, pos, data);
+                });
+                // you can get the native map to work with it
+                var map = vis.getNativeMap();
+                // now, perform any operations you need
+                //map.setZoom(5);
+                // map.panTo([50.5, 30.5]);
+            })
+            .error(function(err) {
+                console.log(err);
+            });
+    }
+    window.onload = main;
+</script>
+
 
 
 
