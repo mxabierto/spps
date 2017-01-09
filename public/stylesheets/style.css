@@ -1,4 +1,4 @@
-.bgimg                          { margin-bottom: 0; height: 400px; background-image: url('/img/banner.jpeg'); background-size: cover; }
+.bgimg                          { margin-bottom: 0; height: 250px; background-image: url('/img/banner.jpeg'); background-size: cover; }
 .bgimg h2                       { margin-bottom: 30px; }
 .bgimg h2 > span                { display: block; font-weight: 400; }
 
