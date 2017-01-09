@@ -56,7 +56,7 @@
     <div class="row">
         <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
             <label>Selecciona una unidad administrativa</label>
-            <select name="UA" id="unidad" class="form-control">
+            <select id="select_unidad" class="form-control">
                 <option value=0>-Unidad Administrativa-</option>
                 <%for( var i=0;i<unidades.length;i++){%>
                 <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
@@ -65,19 +65,15 @@
         </div>
         <div class="col-sm-4"><!-- Elección del PAE-->
             <label>Selecciona un PAE</label>
-            <div id = 'div_pae'>
-                <select name="PAE" class="form-control">
+                <select id="select_pae" class="form-control">
                     <option value=0>-Programa de Acción Específico-</option>
                 </select>
-            </div>
         </div>
         <div class="col-sm-4"><!-- Elección de indicador-->
             <label>Selecciona un indicador</label>
-            <div id ="div_indicador">
-                <select name="IND" class="form-control">
+                <select id="select_indicador" class="form-control">
                     <option value=0>-Indicador-</option>
                 </select>
-            </div>
         </div>
     </div>
 </div>

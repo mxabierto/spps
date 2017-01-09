@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'postgres',
-    password: 'pio'
+    user: 'mtorres',
+    password: 'test'
 };
 
 var db = pgp(cn);
@@ -134,7 +134,7 @@ router.get('/miipps', isAuthenticated, function(req, res, next) {
 });
 
 
-router.post('/paes/', function (req,res ) {
+router.post('/select-pae/', function (req,res ) {
     var unidad = req.body.unidad;
     console.log(unidad);
     db.manyOrNone('select * from pae where unidad = $1',[unidad]).then(function (data) {
@@ -145,7 +145,7 @@ router.post('/paes/', function (req,res ) {
 });
 
 
-router.post('/fichas/',function (req, res) {
+router.post('/select-ficha/',function (req, res) {
     var id_pae = req.body.id_pae;
     console.log('id_pae ', id_pae);
 
