@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'mtorres',
-    password: 'test'
+    user: 'postgres',
+    password: 'pio'
 };
 
 var db = pgp(cn);
@@ -104,7 +104,7 @@ var createHash = function(password){
 
 /* Handle Login POST */
 router.post('/login', passport.authenticate('login', {
-    successRedirect: '/tablero',
+    successRedirect: '/miipps',
     failureRedirect: '/',
     failureFlash : true
 }));
