@@ -233,7 +233,7 @@ header .nav-tabs > li.active > a:focus      { color: #00d2a9; border: none; back
     TABLES STYLES
 *********************************/
 table                                       { width: 100%; }
-table > thead > tr > th                     { font-size: 11px; font-weight: 700; color: #595959; }
+table > thead > tr > th                     { font-size: 20px; font-weight: 700; color: #595959; }
 table > thead > tr > th > .glyphicon        { color: #d8d8d8; margin-right: 5px; position: relative; top: 2px; }
 table.data                                  { margin-top: -10px; border-spacing: 0 20px; border-collapse: separate; }
 table.data > tbody > tr > td                { padding: 10px 15px; background-color: #eee; font-size: 10px; font-weight: 300; color: #595959; }

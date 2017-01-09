@@ -118,15 +118,15 @@ router.get('/signout', function(req, res) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', {title: 'Tablero SPPS', message: req.flash('message') });
+    res.render('index', {title: 'MIIPPS', message: req.flash('message') });
 });
 
 
-router.get('/tablero', isAuthenticated, function(req, res, next) {
+router.get('/miipps', isAuthenticated, function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
-        res.render('tablero', { title: 'MIIPPS',unidades: data });
+        res.render('miipps', { title: 'MIIPPS',unidades: data });
 
     }).catch(function (error) {
         console.log(error);
