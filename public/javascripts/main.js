@@ -13,7 +13,7 @@ select_unidad.change(function () {
             //Intenta cargar la ficha de un indicador
             ficha.load('/ficha', {id_ficha: select_indicador.val()});
             tabla_ind.load('/tabla-indicador', {id_ficha: select_indicador.val()});
-            map_pagination.html('')
+            map_pagination.html('');
             map_pagination.load('/anios', { id : select_indicador.val() });
 
         });
@@ -27,6 +27,8 @@ select_pae.change(function () {
         //Intenta cargar la ficha de un indicador
         ficha.load('/ficha', {id_ficha: select_indicador.val()});
         tabla_ind.load('/tabla-indicador', {id_ficha: select_indicador.val()});
+        map_pagination.html('');
+        map_pagination.load('/anios', { id : select_indicador.val() });
     });
 });
 
@@ -35,4 +37,6 @@ select_indicador.change(function () {
     //Intenta cargar la ficha de un indicador
     ficha.load('/ficha',{ id_ficha: $(this).val()});
     tabla_ind.load('/tabla-indicador',{ id_ficha: $(this).val()});
+    map_pagination.html('');
+    map_pagination.load('/anios', { id : select_indicador.val() });
 });
