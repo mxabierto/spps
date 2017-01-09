@@ -198,10 +198,11 @@ router.post('/tabla-indicador/', function(req, res){
 });
 
 router.post('/anios',function (req, res) {
-    /*db.manyOrNone('').then(function () {
-    });*/
+    db.manyOrNone('select distinct(anio) from indicador where id_ficha = $1 order by anio', [ req.body.id ]).then(function ( data ) {
+        res.render('anios', {anios: data });
+    });
 
-    res.render('anios');
+
 });
 
 

@@ -5,6 +5,7 @@ var select_indicador = $('#select_indicador');
 
 var ficha = $('#ficha');
 var tabla_ind = $('#tabla_indicador');
+var map_pagination = $('#anios');
 
 select_unidad.change(function () {
     select_pae.load('/select-pae', { unidad : $(this).val() }, function () {
@@ -12,6 +13,8 @@ select_unidad.change(function () {
             //Intenta cargar la ficha de un indicador
             ficha.load('/ficha', {id_ficha: select_indicador.val()});
             tabla_ind.load('/tabla-indicador', {id_ficha: select_indicador.val()});
+            map_pagination.html('')
+            map_pagination.load('/anios', { id : select_indicador.val() });
 
         });
     });
