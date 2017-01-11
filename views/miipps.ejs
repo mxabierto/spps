@@ -41,6 +41,8 @@
     </style>
 
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+
 </head>
 <body>
 
@@ -168,18 +170,34 @@
                 layers[1].on('featureOver', function(e, latlng, pos, data) {
                     cartodb.log.log(e, latlng, pos, data);
                 });
-                // you can get the native map to work with it
+                // getting the native map to work with it
                 var map = vis.getNativeMap();
-                // now, perform any operations you need
-                //map.setZoom(5);
-                // map.panTo([50.5, 30.5]);
+
+                //creating sublayers
+                 cartodb.createLayer(map, {
+                    user_name: 'karennz23',
+                    type: 'cartodb',
+                    sublayers: [
+                        {
+                            sql: "SELECT * FROM entidades where cov_id=2",
+                            cartocss: '#entidades {polygon-fill: #ff2200;}'
+                        },
+                        {
+                            sql: "SELECT * FROM entidades where cov_id=3",
+                            cartocss: '#entidades {polygon-fill: #00d667;}'
+                        },
+                    ]
+                })
+                 .addTo(map) //
+                 //*********************
             })
             .error(function(err) {
                 console.log(err);
             });
+
     }
     window.onload = main;
-    var sort=false;
+
 </script>
 
 
