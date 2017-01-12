@@ -154,6 +154,7 @@
 
 
 <script>
+    var map ;
     function main() {
         cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/731e06d0-d629-11e6-902c-0ecd1babdde5/viz.json', {
             shareable: true,
@@ -173,7 +174,7 @@
                     cartodb.log.log(e, latlng, pos, data);
                 });
                 // getting the native map to work with it
-                var map = vis.getNativeMap();
+                /*var */map = vis.getNativeMap();
 
                 //creating sublayers
                  cartodb.createLayer(map, {
@@ -187,11 +188,11 @@
                         {
                             sql: "SELECT * FROM entidades where cov_id=3",
                             cartocss: '#entidades {polygon-fill: #00d667;}'
-                        },
+                        }
                     ]
-                })
-                 .addTo(map) //
-                 //*********************
+                }).addTo(map)
+
+
             })
             .error(function(err) {
                 console.log(err);

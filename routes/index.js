@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'karen',
-    user: 'postgres',
-    password: 'pio'
+    user: 'mtorres',
+    password: 'test'
 };
 
 var db = pgp(cn);
@@ -194,6 +194,22 @@ router.post('/tabla-indicador/', function(req, res){
     }else {
         res.send('<strong>Seleccione un indicador</strong>');
     }
+
+});
+
+router.post('/colores', function (req, res) {
+    console.log('colores ',req.body.id)
+    db.manyOrNone ('select entidad.id, (select color from meta where ' +
+        'id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color '+
+        'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 ',[
+            118//req.body.id
+    ]).then(function (data) {
+        console.log(data);
+        res.json(data);
+    }).catch(function (error) {
+        console.log(error)
+    })
+
 
 });
 

@@ -39,4 +39,54 @@ select_indicador.change(function () {
     tabla_ind.load('/tabla-indicador',{ id_ficha: $(this).val()});
     map_pagination.html('');
     map_pagination.load('/anios', { id : select_indicador.val() });
+
+    function color( val ) {
+        switch ( val ){
+            case 0:
+                return '#a65fc6';
+                break;
+            case 1:
+                return '#ff6363 ';
+                break;
+            case 2:
+                return '#fff547';
+                break;
+            case 3:
+                return '#00d667';
+                break;
+            case 4:
+                return '#ffb351';
+                break;
+            case 5:
+                return '#18f7b0';
+                break;
+        }
+
+        return 'grey';
+    }
+
+    $.post('/colores', { id : select_indicador.val() }, function(data){
+        for (var i=0; i< data.length; i++){
+            karen(data[i].id, color (data[i].color ));
+        }
+    });
+
+
 });
+
+
+function karen (i, color) {
+
+    cartodb.createLayer(map, {
+        user_name: 'karennz23',
+        type: 'cartodb',
+        sublayers: [
+            {
+                sql: "SELECT * FROM entidades where cov_id="+i,
+                cartocss: '#entidades {polygon-fill: '+color+';}'
+            }
+        ]
+    }).addTo(map)
+}
+
+
