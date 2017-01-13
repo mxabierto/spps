@@ -8,7 +8,7 @@
         </li>
 
         <% for ( var i=0; i< anios.length;i++){%>
-        <li><a href="#"> <%= anios[i].anio %></a></li>
+        <li data-id_ficha="<%= id_ficha %>" data-anio="<%= anios[i].anio %>"><a href="#" onclick="karen()" > <%= anios[i].anio %></a></li>
         <%}%>
 
         <li>

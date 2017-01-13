@@ -198,11 +198,13 @@ router.post('/tabla-indicador/', function(req, res){
 });
 
 router.post('/colores', function (req, res) {
-    console.log('colores ',req.body.id)
-    db.manyOrNone ('select entidad.id, (select color from meta where ' +
-        'id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color '+
-        'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 ',[
-            118//req.body.id
+    console.log('colores ',req.body.id);
+
+    db.manyOrNone ('select entidad.id, '+
+    '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
+        'indicador.anio from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2',[
+            118,//req.body.id
+            2013,//req.body.anio
     ]).then(function (data) {
         console.log(data);
         res.json(data);
@@ -215,7 +217,9 @@ router.post('/colores', function (req, res) {
 
 router.post('/anios',function (req, res) {
     db.manyOrNone('select distinct(anio) from indicador where id_ficha = $1 order by anio', [ req.body.id ]).then(function ( data ) {
-        res.render('anios', {anios: data });
+        res.render('anios', {anios: data, id_ficha: req.body.id  });
+    }).catch(function (error) {
+        console.log(error);
     });
 
 

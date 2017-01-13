@@ -30,10 +30,11 @@
 
     <style>
         .circle { display: inline-block; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; position: relative; top: 2.5px; }
-    </style>
 
-    <style>
-        html, body, #map {
+        body{
+            padding-top: 100px;
+        }
+        html, #map {
             height: 100%;
             padding: 0;
             margin: 0;
@@ -151,57 +152,6 @@
 <!-- include cartodb.js library -->
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
 
-
-
-<script>
-    var map ;
-    function main() {
-        cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/731e06d0-d629-11e6-902c-0ecd1babdde5/viz.json', {
-            shareable: true,
-            title: false,
-            description: true,
-            search: true,
-            tiles_loader: true,
-            center_lat: 24,
-            center_lon: -99,
-            zoom: 5
-        })
-            .done(function(vis, layers) {
-                // layer 0 is the base layer, layer 1 is cartodb layer
-                // setInteraction is disabled by default
-                layers[1].setInteraction(true);
-                layers[1].on('featureOver', function(e, latlng, pos, data) {
-                    cartodb.log.log(e, latlng, pos, data);
-                });
-                // getting the native map to work with it
-                /*var */map = vis.getNativeMap();
-
-                //creating sublayers
-                 cartodb.createLayer(map, {
-                    user_name: 'karennz23',
-                    type: 'cartodb',
-                    sublayers: [
-                        {
-                            sql: "SELECT * FROM entidades where cov_id=2",
-                            cartocss: '#entidades {polygon-fill: #ff2200;}'
-                        },
-                        {
-                            sql: "SELECT * FROM entidades where cov_id=3",
-                            cartocss: '#entidades {polygon-fill: #00d667;}'
-                        }
-                    ]
-                }).addTo(map)
-
-
-            })
-            .error(function(err) {
-                console.log(err);
-            });
-
-    }
-    window.onload = main;
-
-</script>
 
 <!-- BROONER CODE: Borrar desde aquí-->
 <script>
