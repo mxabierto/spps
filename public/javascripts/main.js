@@ -8,7 +8,9 @@ function main() {
         tiles_loader: true,
         center_lat: 24,
         center_lon: -99,
-        zoom: 5
+        zoom: 5,
+        position: 'center'
+
     }).done(function (vis, layers) {
         map = vis.getNativeMap();
     }).error(function (error) {
