@@ -203,8 +203,8 @@ router.post('/colores', function (req, res) {
     db.manyOrNone ('select entidad.id, '+
     '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
         'indicador.anio from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2',[
-            118,//req.body.id
-            2013,//req.body.anio
+            req.body.id,
+            req.body.anio
     ]).then(function (data) {
         console.log(data);
         res.json(data);
