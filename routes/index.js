@@ -6,9 +6,9 @@ var pgp = require('pg-promise')();
 var cn = {
     host: 'localhost',
     //port: 5433,
-    database: 'karen',
-    user: 'mtorres',
-    password: 'test'
+    database: 'spps',
+    user: 'sppsuser',
+    password: 'sppspass'
 };
 
 var db = pgp(cn);
