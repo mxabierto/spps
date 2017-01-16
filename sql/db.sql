@@ -1,13 +1,13 @@
 /* DATABASE SCHEMA */
 
-drop database if exists karen;
-create database karen;
+drop database if exists spps;
+create database spps;
 
 drop user if exists mtorres;
-create user mtorres with password 'test';
-grant all privileges on database karen to mtorres;
+create user mtorres with password 'sppspass';
+grant all privileges on database spps to sppsuser;
 
-\c karen;
+\c spps;
 set role mtorres;
 
 drop table if exists usuarios cascade;
