@@ -70,31 +70,28 @@
         </div>
         <div class="col-sm-4"><!-- Elección del PAE-->
             <label>Selecciona un PAE</label>
-                <select id="select_pae" class="form-control">
-                    <option value=0>-Programa de Acción Específico-</option>
-                </select>
+            <select id="select_pae" class="form-control">
+                <option value=0>-Programa de Acción Específico-</option>
+            </select>
         </div>
         <div class="col-sm-4"><!-- Elección de indicador-->
             <label>Selecciona un indicador</label>
-                <select id="select_indicador" class="form-control">
-                    <option value=0>-Indicador-</option>
-                </select>
+            <select id="select_indicador" class="form-control">
+                <option value=0>-Indicador-</option>
+            </select>
         </div>
     </div>
 </div>
 
 <div id="map" style="height: 500px"></div>
 
-<div class="container">
-   <!--<br>
+<div class="container-fluid">
+    <!--<br>
     //<iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
 -->
 
     <div id="anios" style="text-align: center"></div>
 
-</div>
-
-<div class="container-fluid">
     <h1>Ficha técnica</h1>
     <div id ="ficha"></div>
 
@@ -158,50 +155,50 @@
 
             var $rows = $table.find('tr:has(td)'),
 
-            // Temporary delimiter characters unlikely to be typed by keyboard
-            // This is to avoid accidentally splitting the actual contents
-            tmpColDelim = String.fromCharCode(11), // vertical tab character
-            tmpRowDelim = String.fromCharCode(0), // null character
+                // Temporary delimiter characters unlikely to be typed by keyboard
+                // This is to avoid accidentally splitting the actual contents
+                tmpColDelim = String.fromCharCode(11), // vertical tab character
+                tmpRowDelim = String.fromCharCode(0), // null character
 
-            // actual delimiter characters for CSV format
-            colDelim = '","',
-            rowDelim = '"\r\n"',
+                // actual delimiter characters for CSV format
+                colDelim = '","',
+                rowDelim = '"\r\n"',
 
-            // Grab text from table into CSV formatted string
-            csv = '"' + $rows.map(function (i, row) {
-                var $row = $(row),
-                $cols = $row.find('td');
+                // Grab text from table into CSV formatted string
+                csv = '"' + $rows.map(function (i, row) {
+                        var $row = $(row),
+                            $cols = $row.find('td');
 
-                return $cols.map(function (j, col) {
-                var $col = $(col),
-                text = $col.text();
+                        return $cols.map(function (j, col) {
+                            var $col = $(col),
+                                text = $col.text();
 
-                return text.replace(/"/g, '""'); // escape double quotes
+                            return text.replace(/"/g, '""'); // escape double quotes
 
-                }).get().join(tmpColDelim);
+                        }).get().join(tmpColDelim);
 
-            }).get().join(tmpRowDelim)
-            .split(tmpRowDelim).join(rowDelim)
-            .split(tmpColDelim).join(colDelim) + '"',
+                    }).get().join(tmpRowDelim)
+                        .split(tmpRowDelim).join(rowDelim)
+                        .split(tmpColDelim).join(colDelim) + '"',
 
-            // Data URI
-            csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+                // Data URI
+                csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
 
             $(this)
-            .attr({
-            'download': filename,
-            'href': csvData,
-            'target': '_blank'
-            });
+                .attr({
+                    'download': filename,
+                    'href': csvData,
+                    'target': '_blank'
+                });
         }
 
         // This must be a hyperlink
         $(".export").on('click', function (event) {
-        // CSV
-        exportTableToCSV.call(this, $('#tabla_indicador>table'), 'export.csv');
+            // CSV
+            exportTableToCSV.call(this, $('#tabla_indicador>table'), 'export.csv');
 
-        // IF CSV, don't do event.preventDefault() or return false
-        // We actually need this to be a typical hyperlink
+            // IF CSV, don't do event.preventDefault() or return false
+            // We actually need this to be a typical hyperlink
         });
     });
 </script>
