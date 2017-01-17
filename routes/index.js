@@ -226,6 +226,10 @@ router.post('/anios',function (req, res) {
 });
 
 
+router.get('/captura', isAuthenticated, function (req, res) {
+    res.render('captura', { title: 'Captura'});
+});
+
 
 
 module.exports = router;
