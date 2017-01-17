@@ -126,7 +126,7 @@ router.get('/miipps', isAuthenticated, function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
-        res.render('miipps', { title: 'MIIPPS',unidades: data });
+        res.render('miipps', { title: 'MIIPPS',unidades: data, section: 'miipps' });
 
     }).catch(function (error) {
         console.log(error);
@@ -227,7 +227,7 @@ router.post('/anios',function (req, res) {
 
 
 router.get('/captura', isAuthenticated, function (req, res) {
-    res.render('captura', { title: 'Captura'});
+    res.render('captura', { title: 'Captura', section: 'captura'});
 });
 
 
