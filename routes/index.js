@@ -227,7 +227,23 @@ router.post('/anios',function (req, res) {
 
 
 router.get('/captura', isAuthenticated, function (req, res) {
-    res.render('captura', { title: 'Captura', section: 'captura'});
+
+    db.task(function (t) {
+       return this.batch([
+            this.manyOrNone('select id, nombre from ficha'),
+            this.manyOrNone('select * from entidad')
+        ])
+    }).then(function (data) {
+        res.render('captura', {
+            title: 'Captura',
+            section: 'captura',
+            fichas: data[0],
+            entidades: data[1]
+        });
+    }).catch(function (error) {
+        console.log(error);
+    });
+
 });
 
 
