@@ -280,8 +280,10 @@ console.log(req.body);
     ]).then(function (data) {
 
         if (data.count > 0 ){
-            return db.one('update indicador set numerador = $2, denominador = $3, valor = $4 where id_ficha=$1 returning id_ficha', [
+            return db.one('update indicador set numerador = $4, denominador = $5, valor = $6 where id_ficha=$1 and entidad=$2 and anio=$3 returning id_ficha', [
                 +req.body.id_ficha,
+                +req.body.entidad,
+                +req.body.anio,
                 +req.body.numerador,
                 +req.body.denominador,
                 +req.body.valor
