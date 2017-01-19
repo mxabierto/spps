@@ -183,7 +183,7 @@ router.post('/tabla-indicador/', function(req, res){
         db.manyOrNone ('select indicador.anio, indicador.numerador, indicador.denominador, indicador.valor, entidad.nombre, (select color from meta where ' +
             'id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color '+
             'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1',[ id_ficha ]).then(function(data){
-            if (data){
+            if (data.length){
                 res.render('tabla_indicador', { datos: data }  );
             }else{
                 res.send('<strong>Seleccione un indicador</strong>');
