@@ -237,6 +237,7 @@ router.get('/captura', isAuthenticated, function (req, res) {
         res.render('captura', {
             title: 'Captura',
             section: 'captura',
+            message: '',
             fichas: data[0],
             entidades: data[1]
         });
@@ -246,6 +247,72 @@ router.get('/captura', isAuthenticated, function (req, res) {
 
 });
 
+
+router.post('/indicador', isAuthenticated, function (req, res) {
+    console.log(req.body);
+
+    db.one('select * from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
+        +req.body.id_ficha,
+        +req.body.entidad,
+        +req.body.anio
+    ]).then(function (data) {
+        res.json({
+            numerador: data.numerador,
+            denominador: data.denominador,
+            valor: data.valor
+        })
+    }).catch(function (error) {
+        console.log(error);
+        res.json({
+            numerador: null,
+            denominador: null,
+            valor : null
+        })
+    });
+});
+
+router.post('/captura/guardar', isAuthenticated,function ( req, res) {
+console.log(req.body);
+    db.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
+        +req.body.id_ficha,
+        +req.body.entidad,
+        +req.body.anio
+    ]).then(function (data) {
+
+        if (data.count > 0 ){
+            return db.one('update indicador set numerador = $2, denominador = $3, valor = $4 where id_ficha=$1 returning id_ficha', [
+                +req.body.id_ficha,
+                +req.body.numerador,
+                +req.body.denominador,
+                +req.body.valor
+            ]);
+        }else {
+            return db.one('insert into indicador (id_ficha, entidad, anio, numerador, denominador, valor ) values ($1, $2, $3, $4, $5, $6) returning id_ficha', [
+                +req.body.id_ficha,
+                +req.body.entidad,
+                +req.body.anio,
+                +req.body.numerador,
+                +req.body.denominador,
+                +req.body.valor
+            ]);
+        }
+
+    }).then(function (data) {
+        console.log( data );
+        res.json({
+           status: 'Ok',
+            message: 'Datos guardados'
+        });
+    }).catch(function (error) {
+       console.log(error);
+       res.json({
+           status: 'Error',
+           message: 'Ocurrió un error al guardar los datos'
+       })
+    });
+
+
+});
 
 
 module.exports = router;

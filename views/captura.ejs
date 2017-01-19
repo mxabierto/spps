@@ -54,13 +54,13 @@
 
     <div class="well">
 
-    <form>
+    <form id="captura">
 
         <div class="row">
             <div class="col-sm-4">
                 <p>
                     <label>Ficha</label>
-                    <select class="form-control" required>
+                    <select class="form-control" name="id_ficha" required>
 
                         <% for (var i=0; i< fichas.length; i++){%>
                         <option value="<%= fichas[i].id %>"><%= fichas[i].nombre %></option>
@@ -72,7 +72,7 @@
             <div class="col-sm-4">
                 <p>
                     <label>Entidad</label>
-                    <select class="form-control" required>
+                    <select class="form-control" name="entidad" required>
 
                         <%for (var i=0; i< entidades.length; i++){%>
                         <option value="<%= entidades[i].id %>"> <%= entidades[i].nombre %></option>
@@ -83,7 +83,7 @@
             <div class="col-sm-4">
                 <p>
                     <label>Año</label>
-                    <input type="number" class="form-control" min="1900" max="3000" step="1" required>
+                    <input type="number" name="anio" class="form-control" min="1900" max="3000" value="2010" step="1" required>
                 </p>
             </div>
         </div>
@@ -91,23 +91,22 @@
             <div class="col-sm-4">
                 <p>
                     <label>Numerador</label>
-                <input type="nomber" class="form-control">
+                <input type="nomber" name="numerador" class="form-control">
                 </p>
             </div>
             <div class="col-sm-4">
                 <p>
                     <label>Denominador</label>
-                <input type="number" class="form-control">
+                <input type="number" name="denominador" class="form-control">
                 </p>
             </div>
             <div class="col-sm-4">
                 <p>
                     <label>Valor del indicador</label>
-                <input type="number" class="form-control">
+                <input type="number" name="valor" class="form-control">
                 </p>
             </div>
         </div>
-
 
 
         <p>
@@ -124,7 +123,7 @@
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="/javascripts/main.js"></script>
+<script src="/javascripts/captura.js"></script>
 
 
 </body>
