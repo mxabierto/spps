@@ -2,26 +2,26 @@
 <% function color( val ) {
     switch ( val ){
         case 0:
-            return '#a65fc6';
+            return '/img/morado.png';
             break;
         case 1:
-            return '#ff6363 ';
+            return '/img/rojo.png ';
             break;
         case 2:
-            return '#fff547';
+            return '/img/amarillo.png';
             break;
         case 3:
-            return '#00d667';
+            return '/img/verde.png';
             break;
         case 4:
-            return '#ffb351';
+            return '/img/naranja.png';
             break;
         case 5:
-            return '#18f7b0';
+            return '/img/azul.png';
             break;
     }
 
-    return 'grey';
+    return '/img/plata.png';
 }%>
 
 <table class="table">
@@ -46,7 +46,7 @@
         <td><%= datos[i].numerador%></td>
         <td><%= datos[i].denominador%></td>
         <td><%= datos[i].valor%></td>
-        <td> <span class="circle" style="background-color: <%- color( datos[i].color )%>"></span> </td>
+        <td> <img src=<%- color(datos[i].color)%> width="32px"> </td>
     </tr>
     <%}%>
 
