@@ -163,7 +163,7 @@ function karen (i, color) {
         sublayers: [
             {
                 sql: "SELECT * FROM entidades where cov_id="+i,
-                cartocss: '#entidades {polygon-fill: '+color+';}'
+                cartocss: '#entidades {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
             }
         ]
     }).addTo(map)
