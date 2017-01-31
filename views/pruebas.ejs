@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title><%= title %></title>
+
+    <!-- Bootstrap -->
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+    <link href="/stylesheets/main.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        .circle { display: inline-block; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; position: relative; top: 2.5px; }
+
+        body{
+            padding-top: 70px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            /*position: relative;*/
+            width: 960px;
+        }
+
+        .axis text {
+            font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .bar {
+            fill: steelblue;
+            fill-opacity: .9;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+        label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #map {
+            height: 100%;
+            /*padding: 0;
+            margin: 0;*/
+            padding-top: 10px;
+        }
+
+        .campaign-banner{
+            background-image: url( http://www.gob.mx/cms/uploads/organization/main_image/51/zika_1.jpg);
+            background-repeat: no-repeat;
+            min-height: 250px;
+            background-position: center;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <script src="//d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+
+<% include navbar.ejs %>
+<div class="container-fluid">
+
+    <h1>Anuncio</h1>
+
+    <div class="well">
+        <a href="http://www.gob.mx/chikungunya-dengue">
+            <div class="campaign-banner" >
+                <!--<span class="pull-right ad-sign">Anuncio</span> -->
+            </div>
+        </a>
+
+    </div>
+</div>
+
+<div class="container-fluid">
+    <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
+
+    <input type="checkbox"> Ordenar por desempeño<br>
+
+    <script>
+
+        var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var formatPercent = d3.format(".0%");
+
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1, 1);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .tickFormat(formatPercent);
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        d3.tsv("data.tsv", function(error, data) {
+
+            data.forEach(function(d) {
+                d.frequency = +d.frequency;
+            });
+
+            x.domain(data.map(function(d) { return d.letter; }));
+            y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Frequency");
+
+            svg.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d) { return x(d.letter); })
+                .attr("width", x.rangeBand())
+                .attr("y", function(d) { return y(d.frequency); })
+                .attr("height", function(d) { return height - y(d.frequency); });
+
+            d3.select("input").on("change", change);
+
+            var sortTimeout = setTimeout(function() {
+                d3.select("input").property("checked", true).each(change);
+            }, 2000);
+
+            function change() {
+                clearTimeout(sortTimeout);
+
+                // Copy-on-write since tweens are evaluated after a delay.
+                var x0 = x.domain(data.sort(this.checked
+                    ? function(a, b) { return b.frequency - a.frequency; }
+                    : function(a, b) { return d3.ascending(a.letter, b.letter); })
+                    .map(function(d) { return d.letter; }))
+                    .copy();
+
+                svg.selectAll(".bar")
+                    .sort(function(a, b) { return x0(a.letter) - x0(b.letter); });
+
+                var transition = svg.transition().duration(750),
+                    delay = function(d, i) { return i * 50; };
+
+                transition.selectAll(".bar")
+                    .delay(delay)
+                    .attr("x", function(d) { return x0(d.letter); });
+
+                transition.select(".x.axis")
+                    .call(xAxis)
+                    .selectAll("g")
+                    .delay(delay);
+            }
+        });
+
+    </script>
+</div>
+</body>
+</html>

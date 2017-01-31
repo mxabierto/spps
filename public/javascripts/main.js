@@ -1,6 +1,6 @@
 var map ;
 function main() {
-    cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/731e06d0-d629-11e6-902c-0ecd1babdde5/viz.json', {
+    cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/7a439d4c-e5d5-11e6-94a1-0ee66e2c9693/viz.json', {
         shareable: true,
         title: false,
         description: true,
@@ -16,7 +16,7 @@ function main() {
     }).error(function (error) {
         console.log(err);
     });
-      /*  .done(function(vis, layers) {
+      /*  .done(function(vis, layers) {        https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed<--Mapa de estados
             // layer 0 is the base layer, layer 1 is cartodb layer
             // setInteraction is disabled by default
             layers[1].setInteraction(true);

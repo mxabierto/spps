@@ -7,8 +7,8 @@ var cn = {
     host: 'localhost',
     //port: 5433,
     database: 'spps',
-    user: 'postgres',
-    password: '00'
+    user: 'sppsuser',
+    password: 'sppspass'
 };
 
 var db = pgp(cn);
@@ -122,6 +122,15 @@ router.get('/', function (req, res) {
 });
 
 
+/* GET pruebas. */
+router.get('/pruebas', function (req, res) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
+        res.render('pruebas', {title: 'pruebas MIIPPS',unidades: data, section: 'miipps'  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 router.get('/miipps', isAuthenticated, function(req, res, next) {
 
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
@@ -176,13 +185,13 @@ router.post('/ficha/', function (req, res ) {
         res.send('<strong>Seleccione un indicador</strong>');
     }
 });
-
+/*Esto calcula cosas estatales desde datos municipales o jurisdicccionales o estatales lol*/
 router.post('/tabla-indicador/', function(req, res){
     var id_ficha = req.body.id_ficha;
     if (id_ficha != '' && id_ficha != null ) {
-        db.manyOrNone ('select indicador.anio, indicador.numerador, indicador.denominador, indicador.valor, entidad.nombre, (select color from meta where ' +
-            'id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color '+
-            'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1',[ id_ficha ]).then(function(data){
+        db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni, round(cast(100*sum(indicador.numerador)/sum(indicador.denominador) as numeric),2) as vali, entidad.nombre, (select color from meta where ' +
+            'id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color '+
+            'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 and indicador.anio=2015 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
             if (data.length){
                 res.render('tabla_indicador', { datos: data }  );
             }else{
