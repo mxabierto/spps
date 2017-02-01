@@ -185,13 +185,14 @@ router.post('/ficha/', function (req, res ) {
         res.send('<strong>Seleccione un indicador</strong>');
     }
 });
-/*Esto calcula cosas estatales desde datos municipales o jurisdicccionales o estatales lol*/
+/*Desglose de valores estatales a partir de datos municipales, jurisdicccionales o estatales */
+/*Falta limitar indicador.anio....indicador.anio=2015 estaba, pero solo hay un año*/
 router.post('/tabla-indicador/', function(req, res){
     var id_ficha = req.body.id_ficha;
     if (id_ficha != '' && id_ficha != null ) {
         db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni, round(cast(100*sum(indicador.numerador)/sum(indicador.denominador) as numeric),2) as vali, entidad.nombre, (select color from meta where ' +
             'id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color '+
-            'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 and indicador.anio=2015 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
+            'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
             if (data.length){
                 res.render('tabla_indicador', { datos: data }  );
             }else{
@@ -205,7 +206,47 @@ router.post('/tabla-indicador/', function(req, res){
     }
 
 });
+/*Pinta Estados a partir de cualquier desagregado */
+router.post('/colores', function (req, res) {
+    console.log('colores ',req.body.id);
 
+    db.manyOrNone ('select entidad.id, '+
+        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
+        'avg(indicador.anio) from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+        req.body.id,
+        req.body.anio
+    ]).then(function (data) {
+        console.log(data);
+        res.json(data);
+    }).catch(function (error) {
+        console.log(error)
+    })
+
+
+});
+
+/*Pintar municipios desde desagregado municipal*/
+/*
+router.post('/colores', function (req, res) {
+ console.log('colores ',req.body.id);
+
+ db.manyOrNone ('select (indicador.entidad*1000+indicador.id_municipio) as id, '+
+ '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
+ 'indicador.anio from indicador where indicador.id_ficha= $1 and indicador.anio = $2 ',[
+ req.body.id,
+ req.body.anio
+ ]).then(function (data) {
+ console.log(data);
+ res.json(data);
+ }).catch(function (error) {
+ console.log(error)
+ })
+
+ });*/
+
+
+/*Pintar estados solo desde desagregado estatal */
+/*
 router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
@@ -222,7 +263,8 @@ router.post('/colores', function (req, res) {
     })
 
 
-});
+});*/
+
 
 router.post('/anios',function (req, res) {
     db.manyOrNone('select distinct(anio) from indicador where id_ficha = $1 order by anio', [ req.body.id ]).then(function ( data ) {

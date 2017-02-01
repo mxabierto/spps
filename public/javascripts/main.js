@@ -80,7 +80,7 @@ function color( val ) {
             return '#ffb351';
             break;
         case 5:
-            return '#18f7b0';
+            return '#42a1f4';
             break;
     }
 
@@ -153,7 +153,7 @@ select_indicador.change(function () {
 
 });
 
-
+/*Pintar estados*/
 function karen (i, color) {
 //clear map
 
@@ -168,3 +168,18 @@ function karen (i, color) {
         ]
     }).addTo(map)
 }
+/*Pintar municipios*//*
+function karen (i, color) {
+//clear map
+
+    cartodb.createLayer(map, {
+        user_name: 'karennz23',
+        type: 'cartodb',
+        sublayers: [
+            {
+                sql: "SELECT * FROM municipal_juris where cvegeo="+i,
+                cartocss: '#municipal_juris {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
+            }
+        ]
+    }).addTo(map)
+}*/

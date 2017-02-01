@@ -93,8 +93,18 @@
             </select>
         </div>
     </div>
-    <div id="anios" style="text-align: center"></div>
-
+    <div id="anios" style="text-align: center"></div><!-- Elección de año-->
+    <div class="dropdown"><!-- Elección de desagregación-->
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Desagregación
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+            <li><a href="#">Estatal</a></li>
+            <li class="disabled"><a href="#">Jurisdiccional</a></li>
+            <li><a href="#">Municipal</a></li>
+        </ul>
+    </div>
 </div>
 
 <div id="map" style="height: 500px"></div>
