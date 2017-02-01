@@ -283,7 +283,7 @@ router.post('/indicador', isAuthenticated, function (req, res) {
 router.post('/captura/guardar', isAuthenticated,function ( req, res) {
     console.log(req.body);
     db.task(function(t){
-        t.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
+        return t.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
             +req.body.id_ficha,
             +req.body.entidad,
             +req.body.anio
