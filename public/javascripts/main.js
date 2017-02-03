@@ -154,6 +154,7 @@ select_indicador.change(function () {
 });
 
 /*Pintar estados*/
+
 function karen (i, color) {
 //clear map
 
@@ -168,6 +169,22 @@ function karen (i, color) {
         ]
     }).addTo(map)
 }
+/*Pintar jurisdicciones*/
+/*
+ function karen (i, color) {
+ //clear map
+
+ cartodb.createLayer(map, {
+ user_name: 'karennz23',
+ type: 'cartodb',
+ sublayers: [
+ {
+ sql: "SELECT * FROM municipal_juris where clave_juri="+i,
+ cartocss: '#municipal_juris {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
+ }
+ ]
+ }).addTo(map)
+ }*/
 /*Pintar municipios*//*
 function karen (i, color) {
 //clear map

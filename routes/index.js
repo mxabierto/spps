@@ -207,6 +207,7 @@ router.post('/tabla-indicador/', function(req, res){
 
 });
 /*Pinta Estados a partir de cualquier desagregado */
+
 router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
@@ -244,6 +245,24 @@ router.post('/colores', function (req, res) {
 
  });*/
 
+/*Pintar jurisdicciones desde desagregado municipal o jurisdiccional*/
+/*
+ router.post('/colores', function (req, res) {
+ console.log('colores ',req.body.id);
+
+ db.manyOrNone ('select (indicador.entidad*100+indicador.cve_jurisdiccion) as id, '+
+ '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
+ 'avg(indicador.anio) from indicador where indicador.id_ficha= $1 and indicador.anio = $2 group by indicador.entidad,indicador.cve_jurisdiccion',[
+ req.body.id,
+ req.body.anio
+ ]).then(function (data) {
+ console.log(data);
+ res.json(data);
+ }).catch(function (error) {
+ console.log(error)
+ })
+
+ });*/
 
 /*Pintar estados solo desde desagregado estatal */
 /*
