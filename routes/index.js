@@ -212,8 +212,8 @@ router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
     db.manyOrNone ('select entidad.id, '+
-        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
-        'avg(indicador.anio) from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color'+
+        ' from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
         req.body.id,
         req.body.anio
     ]).then(function (data) {

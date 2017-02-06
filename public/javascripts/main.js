@@ -1,6 +1,6 @@
 var map ;
 function main() {
-    cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/7a439d4c-e5d5-11e6-94a1-0ee66e2c9693/viz.json', {
+    cartodb.createVis('map', 'https://karennz23.carto.com/api/v2/viz/2101ccca-eca3-11e6-977d-0e3ff518bd15/viz.json', {
         shareable: true,
         title: false,
         description: true,
@@ -163,8 +163,8 @@ function karen (i, color) {
         type: 'cartodb',
         sublayers: [
             {
-                sql: "SELECT * FROM entidades where cov_id="+i,
-                cartocss: '#entidades {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
+                sql: "SELECT cartodb_id,the_geom_webmercator FROM entidades where cov_id="+i,
+                cartocss: '#entidades {polygon-fill: '+color+'; ::outline {line-width: 2;line-opacity: 0.5;}}'
             }
         ]
     }).addTo(map)
@@ -179,8 +179,8 @@ function karen (i, color) {
  type: 'cartodb',
  sublayers: [
  {
- sql: "SELECT * FROM municipal_juris where clave_juri="+i,
- cartocss: '#municipal_juris {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
+ sql: "SELECT cartodb_id,the_geom_webmercator FROM js_prueba where clave_juri="+i,
+ cartocss: '#js_prueba {polygon-fill: '+color+';::outline {line-width: 1;line-opacity: 0.5;}}'
  }
  ]
  }).addTo(map)
