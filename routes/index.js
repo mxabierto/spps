@@ -386,5 +386,21 @@ console.log(req.body);
 
 });
 
+router.get('/miipps/159/:id/:anio',function(req,res){
+    /*res.json([{'entidad':'AGS','valor':6.54},
+        {'entidad':'BC','valor':4.42},
+        {'entidad':'BCS','valor':4.31}])*/
+
+    db.manyOrNone ('select entidad.abrevia as entidad, 100*sum(indicador.numerador)/sum(indicador.denominador) as valor'+
+        ' from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+        req.params.id,
+        req.params.anio
+    ]).then(function (data) {
+        console.log(data);
+        res.json(data);
+    }).catch(function (error) {
+        console.log(error)
+    })
+});
 
 module.exports = router;

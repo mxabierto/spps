@@ -135,10 +135,13 @@
 
     <input type="checkbox"> Ordenar <br>
 
+    <div id="g1">
+
+    </div>
     <script>
 
         var margin = {top: 20, right: 20, bottom: 30, left: 40},
-            width = 1500 - margin.left - margin.right,
+            width = 1000 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
        // var formatPercent = d3.format(".1%");
@@ -158,13 +161,13 @@
             .orient("left")
             //.tickFormat(formatPercent);
 
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#g1").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" +  margin.left + "," + margin.top + ")");
 
-        d3.csv("data.csv", function(error, data) {
+        d3.json('/miipps/159/159/2015', function(error, data) {
 
             data.forEach(function(d) {
                 d.valor = +d.valor;
