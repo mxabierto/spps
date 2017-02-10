@@ -115,7 +115,8 @@
         </div>
     </div>
     <div id="anios" style="text-align: center"></div><!-- Elección de año-->
-    <div class="dropdown"><!-- Elección de desagregación-->
+    <!-- Elección de desagregación: -->
+    <!--<div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             Desagregación
             <span class="caret"></span>
@@ -125,26 +126,60 @@
             <li class="disabled"><a href="#">Jurisdiccional</a></li>
             <li class="disabled"><a href="#">Municipal</a></li>
         </ul>
-    </div>
+    </div>-->
 </div>
 
 <div id="map" style="height: 500px"></div>
 
 <div class="container-fluid">
+    <!--<br>
+    //<iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+-->
+
+    <h1>Ficha técnica</h1>
+    <div id ="ficha"></div>
+
+    <h1>Evaluación del desempeño</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td><strong>Excelente&nbsp&nbsp&nbsp</strong></td>
+                <td><strong>Satisfactorio</strong></td>
+                <td><strong>Mínimo&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</strong></td>
+                <td><strong>Precario&nbsp&nbsp&nbsp&nbsp</strong></td>
+            </tr>
+            <tr>
+                <td><img align=center src=/img/verde.png width="48px"></td>
+                <td><img src=/img/amarillo.png width="48px"></td>
+                <td><img src=/img/rojo.png width="48px"></td>
+                <td><img src=/img/morado.png width="48px"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Indicadores por estado</h1>
+    <div id="tabla_indicador"></div>
+
+    <!-- BROONER CODE: Borrar desde aquí-->
+    <!--<a href="#" class="btn btn-default" style="text-align:right">Exportar</a>-->
+    <!-- BROONER CODE: Borrar hasta aquí-->
+
+</div>
+
+<!-- Gráfica de barras-->
+<div class="container-fluid">
     <h1>Gráficos</h1>
 
     <input type="checkbox"> Ordenar <br>
 
-    <div id="g1">
-
-    </div>
+    <div id="g1"></div>
     <script>
 
         var margin = {top: 20, right: 20, bottom: 30, left: 40},
             width = 1000 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-       // var formatPercent = d3.format(".1%");
+        // var formatPercent = d3.format(".1%");
 
         var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], .1, 1);
@@ -159,7 +194,7 @@
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
-            //.tickFormat(formatPercent);
+        //.tickFormat(formatPercent);
 
         var svg = d3.select("#g1").append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -236,38 +271,7 @@
     </script>
 </div>
 
-<div class="container-fluid">
-    <!--<br>
-    //<iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
--->
-
-    <h1>Ficha técnica</h1>
-    <div id ="ficha"></div><!-- BROONER CODE: Borrar desde aquí-->
-    <h1>Evaluación del desempeño</h1>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td><strong>Excelente&nbsp&nbsp&nbsp</strong></td>
-                <td><strong>Satisfactorio</strong></td>
-                <td><strong>Mínimo&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</strong></td>
-                <td><strong>Precario&nbsp&nbsp&nbsp&nbsp</strong></td>
-            </tr>
-            <tr>
-                <td><img align=center src=/img/verde.png width="48px"></td>
-                <td><img src=/img/amarillo.png width="48px"></td>
-                <td><img src=/img/rojo.png width="48px"></td>
-                <td><img src=/img/morado.png width="48px"></td>
-            </tr>
-        </tbody>
-    </table><!-- BROONER CODE: Borrar hasta aquí-->
-    <h1>Indicadores por estado</h1>
-    <div id="tabla_indicador"></div>
-    <!-- BROONER CODE: Borrar desde aquí-->
-    <a href="#" class="btn btn-default" style="text-align:right">Exportar</a>
-    <!-- BROONER CODE: Borrar hasta aquí-->
-
-</div>
-
+<!--Tabla para exportar datos-->
 <div class="container-fluid statistics">
     <div class="row">
         <div class="col-md-12">
@@ -285,12 +289,12 @@
                     <tbody>
                     <tr id="api">
 
-                        <td>Indicadores objetivo 1</td>
-                        <td>ODS</td>
+                        <td>Indicador</td>
+                        <td>SSA</td>
                         <td>
                             <span class="label" data-format="csv">CSV</span>
-                            <span class="label" data-format="xlsx">XLS</span>
-                            <span class="label" data-format="pdf">PDF</span>
+                            <!--<span class="label" data-format="xlsx">XLS</span>-->
+                            <!--<span class="label" data-format="pdf">PDF</span>-->
                         </td>
                     </tr>
                     </tbody>

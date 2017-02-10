@@ -100,7 +100,7 @@ select_unidad.change(function () {
                     //alert( $(this).data('id_ficha'));
                     $.post('/colores', { id : $(this).data('id_ficha'), anio: $(this).data('anio') }, function(data){
                         for (var i=0; i< data.length; i++){
-                            karen(data[i].id, color (data[i].color ));
+                            pintar(data[i].id, color (data[i].color ));
                         }
                     });
                 });
@@ -124,7 +124,7 @@ select_pae.change(function () {
                 //alert( $(this).data('id_ficha'));
                 $.post('/colores', { id : $(this).data('id_ficha'), anio: $(this).data('anio') }, function(data){
                     for (var i=0; i< data.length; i++){
-                        karen(data[i].id, color (data[i].color ));
+                        pintar(data[i].id, color (data[i].color ));
                     }
                 });
             });
@@ -145,7 +145,7 @@ select_indicador.change(function () {
             //alert( $(this).data('id_ficha'));
             $.post('/colores', { id : $(this).data('id_ficha'), anio: $(this).data('anio') }, function(data){
                 for (var i=0; i< data.length; i++){
-                    karen(data[i].id, color (data[i].color ));
+                    pintar(data[i].id, color (data[i].color ));
                 }
             });
         });
@@ -155,7 +155,7 @@ select_indicador.change(function () {
 
 /*Pintar estados*/
 
-function karen (i, color) {
+function pintar (i, color) {
 //clear map
 
     cartodb.createLayer(map, {
@@ -171,7 +171,7 @@ function karen (i, color) {
 }
 /*Pintar jurisdicciones*/
 /*
- function karen (i, color) {
+ function  pintar(i, color) {
  //clear map
 
  cartodb.createLayer(map, {
@@ -186,7 +186,7 @@ function karen (i, color) {
  }).addTo(map)
  }*/
 /*Pintar municipios*//*
-function karen (i, color) {
+function pintar (i, color) {
 //clear map
 
     cartodb.createLayer(map, {

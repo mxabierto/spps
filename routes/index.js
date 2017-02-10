@@ -192,7 +192,7 @@ router.post('/tabla-indicador/', function(req, res){
     if (id_ficha != '' && id_ficha != null ) {
         db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni, round(cast(100*sum(indicador.numerador)/sum(indicador.denominador) as numeric),2) as vali, entidad.nombre, (select color from meta where ' +
             'id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color '+
-            'from indicador, entidad where  indicador.entidad = entidad.id and id_ficha= $1 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
+            'from indicador, entidad where  indicador.entidad = entidad.id and indicador.anio=2015 and id_ficha= $1 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
             if (data.length){
                 res.render('tabla_indicador', { datos: data }  );
             }else{
@@ -207,7 +207,7 @@ router.post('/tabla-indicador/', function(req, res){
 
 });
 /*Pinta Estados a partir de cualquier desagregado */
-
+/*Cálculo de datos estatales con el método 100*num/den  */
 router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
@@ -387,6 +387,7 @@ console.log(req.body);
 });
 
 router.get('/miipps/159/:id/:anio',function(req,res){
+    /*Las líneas siguientes (comentadas) muestran cómo pasar arreglos para la gráfica*/
     /*res.json([{'entidad':'AGS','valor':6.54},
         {'entidad':'BC','valor':4.42},
         {'entidad':'BCS','valor':4.31}])*/
