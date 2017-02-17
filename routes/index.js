@@ -140,6 +140,15 @@ router.get('/dashboard', function (req, res) {
     });
 });
 
+/* GET comparativo. */
+router.get('/compara', function (req, res) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
+        res.render('compara', {title: 'MIIPPS: Comparativo',unidades: data, section: 'miipps'  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 /* GET pruebas. */
 router.get('/pruebas', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
