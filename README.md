@@ -1,5 +1,5 @@
-# SPPS
-Dashboard SPPS DataLab
+# MIIPPS
+Dashboard SPPS-DataLab
 
 # Setup instructions
 ## Dependencies 

@@ -203,7 +203,7 @@ id integer primary key,
 nombre text
 );
 
-insert into jurisdicciones values
+insert into jurisdiccion values
 (101,'Aguascalientes'),
 (102,'Rincón de Romos'),
 (103,'Calvillo'),
@@ -443,7 +443,7 @@ drop table if exists municipios;
 create table municipios(
 id_entidad integer,
 cve_jurisdiccion integer,/* aquí va la repetible que está en indicador */
-id integer primary key,
+id integer, /*primary key,*/
 id_jurisdiccion integer,/* aquí va la combinada que está en el shp de carto id_entidad+cve_jurisdiccion*/
 nombre text
 );
