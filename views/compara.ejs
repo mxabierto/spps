@@ -28,6 +28,24 @@
         body{
             padding-top: 70px;
         }
+        path {
+            stroke: steelblue;
+            stroke-width: 3;
+            fill: none;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+        .legend {
+            font-size: 12px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
     </style>
 
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
@@ -41,86 +59,91 @@
     <% include navbar.ejs %>
     <div class="container-fluid">
         <h1>Recién nacidos con bajo peso</h1>
-        <h3>Esta gráfica no existe.</h3>
+        <h3>Esta gráfica muestra los valores del indicador a través del tiempo.</h3>
 
-        <p>
-            <label for="nHeight"
-                   style="display:inline-block ; width: 240px; text-align: right">
-                Edad de la madre = <span id="nHeight-value">…</span>
-            </label>
-            <input type="range" min="10" max="55" id="nHeight">
-        </p>
-
-        <p>
-            <label for="nWidth"
-                   style="display: inline-block; width: 240px; text-align: right">
-                Año = <span id="nWidth-value">…</span>
-            </label>
-            <input type="range" min="208" max="215" id="nWidth">
-        </p>
-        <div id="chart"></div>
-
+        <div id="lines"></div>
         <script>
 
-            var width = 600;
-            var height = 300;
+            // Set the dimensions of the canvas / graph
+            var margin = {top: 30, right: 20, bottom: 50, left: 50},
+                width = 1000 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
 
-            var holder = d3.select("#chart")
+            // Parse the date / time
+           var parseDate = d3.timeParse("%Y");
+
+            // Set the ranges
+            var x = d3.scaleTime().range([0, width]);
+            var y = d3.scaleLinear().range([height, 0]);
+
+            // Define the line
+            var priceline = d3.line()
+                .x(function(d) { return x(d.date); })
+                .y(function(d) { return y(d.price); });
+
+            // Adds the svg canvas
+            var svg = d3.select("#lines")
                 .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform",
+                          "translate(" + margin.left + "," + margin.top + ")");
 
-            // draw a rectangle
-            holder.append("rect")
-                .attr("x", 300)
-                .attr("y", 150)
-                .style("fill", "none")
-                .style("stroke", "blue")
-                .attr("height", 150)
-                .attr("width", 200);
+            // Get the data
+            d3.csv('/tiempo159.csv', function(error, data) {
+                data.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                    d.price = +d.price;
+                });
 
-            // read a change in the height input
-            d3.select("#nHeight").on("input", function() {
-                updateHeight(+this.value);
+                // Scale the range of the data
+                x.domain(d3.extent(data, function(d) { return d.date; }));
+                y.domain([0, d3.max(data, function(d) { return d.price; })]);
+
+                // Nest the entries by symbol
+                var dataNest = d3.nest()
+                    .key(function(d) {return d.symbol;})
+                    .entries(data);
+
+                // set the colour scale
+                var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+                legendSpace = width/dataNest.length; // spacing for the legend
+
+                // Loop through each symbol / key
+                dataNest.forEach(function(d,i) {
+
+                    svg.append("path")
+                        .attr("class", "line")
+                        .style("stroke", function() { // Add the colours dynamically
+                            return d.color = color(d.key); })
+                        .attr("d", priceline(d.values));
+                    // Add the Legend
+                    svg.append("text")
+                        .attr("x", (legendSpace/2)+i*legendSpace)  // space legend
+                        .attr("y", height + (margin.bottom/2)+ 20)
+                        .attr("class", "legend")    // style the legend
+                        .style("fill", function() { // Add the colours dynamically
+                            return d.color = color(d.key); })
+                        .text(d.key);
+
+                });
+
+                // Add the X Axis
+                svg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
+
+                // Add the Y Axis
+                svg.append("g")
+                    .attr("class", "axis")
+                    .call(d3.axisLeft(y));
+
             });
-
-            // read a change in the width input
-            d3.select("#nWidth").on("input", function() {
-                updateWidth(+this.value);
-            });
-
-            // update the values
-            updateHeight(150);
-            updateWidth(100);
-
-            // Update the height attributes
-            function updateHeight(nHeight) {
-
-                // adjust the text on the range slider
-                d3.select("#nHeight-value").text(nHeight);
-                d3.select("#nHeight").property("value", nHeight);
-
-                // update the rectangle height
-                holder.selectAll("rect")
-                    .attr("y", 150-(nHeight/2))
-                    .attr("height", nHeight);
-            }
-
-            // Update the width attributes
-            function updateWidth(nWidth) {
-
-                // adjust the text on the range slider
-                d3.select("#nWidth-value").text(nWidth);
-                d3.select("#nWidth").property("value", nWidth);
-
-                // update the rectangle width
-                holder.selectAll("rect")
-                    .attr("x", 300-(nWidth/2))
-                    .attr("width", nWidth);
-            }
 
         </script>
-
 
     </div>
     <!-- Hacia abajo hay cosas que pueden ser útiles para experimentar o bien borrarse para siempre -->

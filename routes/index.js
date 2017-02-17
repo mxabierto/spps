@@ -125,7 +125,7 @@ router.get('/', function (req, res) {
 /* GET bubbles. */
 router.get('/bubbles', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
-        res.render('bubbles', {title: 'MIIPPS: Bubbles',unidades: data, section: 'miipps'  });
+        res.render('bubbles', {title: 'Bubbles | MIIPPS',unidades: data, section: 'miipps'  });
     }).catch(function (error) {
         console.log(error);
     });
@@ -134,7 +134,16 @@ router.get('/bubbles', function (req, res) {
 /* GET dashboard. */
 router.get('/dashboard', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
-        res.render('dashboard', {title: 'MIIPPS: Dashboard',unidades: data, section: 'miipps'  });
+        res.render('dashboard', {title: 'Dashboard | MIIPPS',unidades: data, section: 'miipps'  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
+/* GET comparativo. */
+router.get('/compara', function (req, res) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
+        res.render('compara', {title: 'Comparativo | MIIPPS',unidades: data, section: 'miipps'  });
     }).catch(function (error) {
         console.log(error);
     });
@@ -143,7 +152,7 @@ router.get('/dashboard', function (req, res) {
 /* GET pruebas. */
 router.get('/pruebas', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
-        res.render('pruebas', {title: 'MIIPPS: Pruebas',unidades: data, section: 'miipps'  });
+        res.render('pruebas', {title: 'Pruebas | MIIPPS',unidades: data, section: 'miipps'  });
     }).catch(function (error) {
         console.log(error);
     });

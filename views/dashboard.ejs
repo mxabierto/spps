@@ -74,10 +74,10 @@
         <script>
             function dashboard(id, fData){
                 var barColor = 'steelblue';
-                function segColor(c){ return {low:"#807dba", midl:"#e08214",high:"#41ab5d",midh:"#42a1f4"}[c]; }
+                function segColor(c){ return {muy_bajo:"#807dba", bajo:"#e08214",alto:"#41ab5d",normal:"#42a1f4"}[c]; }
 
                 // Calcula el total por estado.
-                fData.forEach(function(d){d.total=d.freq.low+d.freq.midl+d.freq.high+d.freq.midh;});
+                fData.forEach(function(d){d.total=d.freq.muy_bajo+d.freq.bajo+d.freq.alto+d.freq.normal;});
 
                 // function to handle histogram.
                 function histoGram(fD){
@@ -257,7 +257,7 @@
                 }
 
                 // calculate total frequency by segment for all escolaridad.
-                var tF = ['low','midl','midh','high'].map(function(d){
+                var tF = ['muy_bajo','bajo','normal','alto'].map(function(d){
                     return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
                 });
 
@@ -272,17 +272,17 @@
 
         <script>
             var freqData=[
-                {escolaridad:'Ninguna',freq:{low:2689, midl:33520,midh:8394, high:1495}}
-                ,{escolaridad:'PI',freq:{low:4621, midl:54991,midh:14403, high:2480}}
-                ,{escolaridad:'PC',freq:{low:12909, midl:159101,midh:42258, high:6979}}
-                ,{escolaridad:'SI',freq:{low:7093, midl:83013,midh:20448, high:3113}}
-                ,{escolaridad:'SC',freq:{low:37573, midl:452480,midh:122742, high:19338}}
-                ,{escolaridad:'BI',freq:{low:25602, midl:108763,midh:27059, high:3954}}
-                ,{escolaridad:'BC',freq:{low:18337, midl:306737,midh:83949, high:12806}}
-                ,{escolaridad:'LI',freq:{low:43, midl:18920,midh:5249, high:787}}
-                ,{escolaridad:'LC',freq:{low:1624, midl:193216,midh:52594, high:7714}}
-                ,{escolaridad:'POI',freq:{low:128, midl:426,midh:83, high:16}}
-                ,{escolaridad:'POC',freq:{low:1699, midl:12899,midh:2947, high:371}}
+                {escolaridad:'Ninguna',freq:{muy_bajo:2689, bajo:33520,normal:8394, alto:1495}}
+                ,{escolaridad:'PI',freq:{muy_bajo:4621, bajo:54991,normal:14403, alto:2480}}
+                ,{escolaridad:'Primaria',freq:{muy_bajo:12909, bajo:159101,normal:42258, alto:6979}}
+                ,{escolaridad:'SI',freq:{muy_bajo:7093, bajo:83013,normal:20448, alto:3113}}
+                ,{escolaridad:'Secundaria',freq:{muy_bajo:37573, bajo:452480,normal:122742, alto:19338}}
+                ,{escolaridad:'BI',freq:{muy_bajo:25602, bajo:108763,normal:27059, alto:3954}}
+                ,{escolaridad:'Bachillerato',freq:{muy_bajo:18337, bajo:306737,normal:83949, alto:12806}}
+                ,{escolaridad:'GI',freq:{muy_bajo:43, bajo:18920,normal:5249, alto:787}}
+                ,{escolaridad:'Grado',freq:{muy_bajo:1624, bajo:193216,normal:52594, alto:7714}}
+                ,{escolaridad:'PosI',freq:{muy_bajo:128, bajo:426,normal:83, alto:16}}
+                ,{escolaridad:'Posgrado',freq:{muy_bajo:1699, bajo:12899,normal:2947, alto:371}}
             ];
 
             dashboard('#dashboard',freqData);
