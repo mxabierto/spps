@@ -131,6 +131,15 @@ router.get('/bubbles', function (req, res) {
     });
 });
 
+/* GET dashboard. */
+router.get('/dashboard', function (req, res) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
+        res.render('dashboard', {title: 'MIIPPS: Dashboard',unidades: data, section: 'miipps'  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 /* GET pruebas. */
 router.get('/pruebas', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {

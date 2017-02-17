@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title><%= title %></title>
+
+    <!-- Bootstrap -->
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
+    <link href="/stylesheets/main.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="//d3js.org/d3.v3.min.js"></script>
+
+    <style>
+        body{
+            padding-top: 70px;
+        }
+        path {  stroke: #fff; }
+        path:hover {  opacity:0.9; }
+        rect:hover {  fill:blue; }
+        .axis {  font: 10px sans-serif; }
+        .legend tr{    border-bottom:1px solid grey; }
+        .legend tr:first-child{    border-top:1px solid grey; }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .x.axis path {  display: none; }
+        .legend{
+            margin-bottom:76px;
+            display:inline-block;
+            border-collapse: collapse;
+            border-spacing: 0px;
+        }
+        .legend td{
+            padding:4px 5px;
+            vertical-align:bottom;
+        }
+        .legendFreq, .legendPerc{
+            align:right;
+            width:50px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+
+
+</head>
+<body>
+
+    <% include navbar.ejs %>
+    <div class="container-fluid">
+        <h1>Recién nacidos con bajo peso</h1>
+        <h3>Esta gráfica permite filtrar los valores del indicador de acuerdo a la escolaridad de la madre.</h3>
+        <div id='dashboard'></div>
+        <script>
+            function dashboard(id, fData){
+                var barColor = 'steelblue';
+                function segColor(c){ return {low:"#807dba", midl:"#e08214",high:"#41ab5d",midh:"#42a1f4"}[c]; }
+
+                // Calcula el total por estado.
+                fData.forEach(function(d){d.total=d.freq.low+d.freq.midl+d.freq.high+d.freq.midh;});
+
+                // function to handle histogram.
+                function histoGram(fD){
+                    var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
+                    hGDim.w = 500 - hGDim.l - hGDim.r,
+                        hGDim.h = 300 - hGDim.t - hGDim.b;
+
+                    //create svg for histogram.
+                    var hGsvg = d3.select(id).append("svg")
+                        .attr("width", hGDim.w + hGDim.l + hGDim.r)
+                        .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+                        .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+
+                    // create function for x-axis mapping.
+                    var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+                        .domain(fD.map(function(d) { return d[0]; }));
+
+                    // Add x-axis to the histogram svg.
+                    hGsvg.append("g").attr("class", "x axis")
+                        .attr("transform", "translate(0," + hGDim.h + ")")
+                        .call(d3.svg.axis().scale(x).orient("bottom"));
+
+                    // Create function for y-axis map.
+                    var y = d3.scale.linear().range([hGDim.h, 0])
+                        .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+
+                    // Create bars for histogram to contain rectangles and freq labels.
+                    var bars = hGsvg.selectAll(".bar").data(fD).enter()
+                        .append("g").attr("class", "bar");
+
+                    //create the rectangles.
+                    bars.append("rect")
+                        .attr("x", function(d) { return x(d[0]); })
+                        .attr("y", function(d) { return y(d[1]); })
+                        .attr("width", x.rangeBand())
+                        .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                        .attr('fill',barColor)
+                        .on("mouseover",mouseover)// mouseover is defined below.
+                        .on("mouseout",mouseout);// mouseout is defined below.
+
+                    //Create the frequency labels above the rectangles.
+                    bars.append("text").text(function(d){ return d3.format(",")(d[1])})
+                        .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
+                        .attr("y", function(d) { return y(d[1])-5; })
+                        .attr("text-anchor", "middle");
+
+                    function mouseover(d){  // utility function to be called on mouseover.
+                        // Fitro para escolaridad seleccionada.
+                        var st = fData.filter(function(s){ return s.escolaridad == d[0];})[0],
+                            nD = d3.keys(st.freq).map(function(s){ return {type:s, freq:st.freq[s]};});
+
+                        // call update functions of pie-chart and legend.
+                        pC.update(nD);
+                        leg.update(nD);
+                    }
+
+                    function mouseout(d){    // utility function to be called on mouseout.
+                        // reset the pie-chart and legend.
+                        pC.update(tF);
+                        leg.update(tF);
+                    }
+
+                    // create function to update the bars. This will be used by pie-chart.
+                    hG.update = function(nD, color){
+                        // update the domain of the y-axis map to reflect change in frequencies.
+                        y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+
+                        // Attach the new data to the bars.
+                        var bars = hGsvg.selectAll(".bar").data(nD);
+
+                        // transition the height and color of rectangles.
+                        bars.select("rect").transition().duration(500)
+                            .attr("y", function(d) {return y(d[1]); })
+                            .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                            .attr("fill", color);
+
+                        // transition the frequency labels location and change value.
+                        bars.select("text").transition().duration(500)
+                            .text(function(d){ return d3.format(",")(d[1])})
+                            .attr("y", function(d) {return y(d[1])-5; });
+                    }
+                    return hG;
+                }
+
+                // function to handle pieChart.
+                function pieChart(pD){
+                    var pC ={},    pieDim ={w:250, h: 250};
+                    pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
+
+                    // create svg for pie chart.
+                    var piesvg = d3.select(id).append("svg")
+                        .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
+                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+
+                    // create function to draw the arcs of the pie slices.
+                    var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
+
+                    // create a function to compute the pie slice angles.
+                    var pie = d3.layout.pie().sort(null).value(function(d) { return d.freq; });
+
+                    // Draw the pie slices.
+                    piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
+                        .each(function(d) { this._current = d; })
+                        .style("fill", function(d) { return segColor(d.data.type); })
+                        .on("mouseover",mouseover).on("mouseout",mouseout);
+
+                    // create function to update pie-chart. This will be used by histogram.
+                    pC.update = function(nD){
+                        piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
+                            .attrTween("d", arcTween);
+                    }
+                    // Utility function to be called on mouseover a pie slice.
+                    function mouseover(d){
+                        // call the update function of histogram with new data.
+                        hG.update(fData.map(function(v){
+                            return [v.escolaridad,v.freq[d.data.type]];}),segColor(d.data.type));
+                    }
+                    //Utility function to be called on mouseout a pie slice.
+                    function mouseout(d){
+                        // call the update function of histogram with all data.
+                        hG.update(fData.map(function(v){
+                            return [v.escolaridad,v.total];}), barColor);
+                    }
+                    // Animating the pie-slice requiring a custom function which specifies
+                    // how the intermediate paths should be drawn.
+                    function arcTween(a) {
+                        var i = d3.interpolate(this._current, a);
+                        this._current = i(0);
+                        return function(t) { return arc(i(t));    };
+                    }
+                    return pC;
+                }
+
+                // function to handle legend.
+                function legend(lD){
+                    var leg = {};
+
+                    // create table for legend.
+                    var legend = d3.select(id).append("table").attr('class','legend');
+
+                    // create one row per segment.
+                    var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+
+                    // create the first column for each segment.
+                    tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+                        .attr("width", '16').attr("height", '16')
+                        .attr("fill",function(d){ return segColor(d.type); });
+
+                    // create the second column for each segment.
+                    tr.append("td").text(function(d){ return d.type;});
+
+                    // create the third column for each segment.
+                    tr.append("td").attr("class",'legendFreq')
+                        .text(function(d){ return d3.format(",")(d.freq);});
+
+                    // create the fourth column for each segment.
+                    tr.append("td").attr("class",'legendPerc')
+                        .text(function(d){ return getLegend(d,lD);});
+
+                    // Utility function to be used to update the legend.
+                    leg.update = function(nD){
+                        // update the data attached to the row elements.
+                        var l = legend.select("tbody").selectAll("tr").data(nD);
+
+                        // update the frequencies.
+                        l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
+
+                        // update the percentage column.
+                        l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});
+                    }
+
+                    function getLegend(d,aD){ // Utility function to compute percentage.
+                        return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
+                    }
+
+                    return leg;
+                }
+
+                // calculate total frequency by segment for all escolaridad.
+                var tF = ['low','midl','midh','high'].map(function(d){
+                    return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
+                });
+
+                // calculate total frequency by escolaridad for all segment.
+                var sF = fData.map(function(d){return [d.escolaridad,d.total];});
+
+                var hG = histoGram(sF), // create the histogram.
+                    pC = pieChart(tF), // create the pie-chart.
+                    leg= legend(tF);  // create the legend.
+            }
+        </script>
+
+        <script>
+            var freqData=[
+                {escolaridad:'Ninguna',freq:{low:2689, midl:33520,midh:8394, high:1495}}
+                ,{escolaridad:'PI',freq:{low:4621, midl:54991,midh:14403, high:2480}}
+                ,{escolaridad:'PC',freq:{low:12909, midl:159101,midh:42258, high:6979}}
+                ,{escolaridad:'SI',freq:{low:7093, midl:83013,midh:20448, high:3113}}
+                ,{escolaridad:'SC',freq:{low:37573, midl:452480,midh:122742, high:19338}}
+                ,{escolaridad:'BI',freq:{low:25602, midl:108763,midh:27059, high:3954}}
+                ,{escolaridad:'BC',freq:{low:18337, midl:306737,midh:83949, high:12806}}
+                ,{escolaridad:'LI',freq:{low:43, midl:18920,midh:5249, high:787}}
+                ,{escolaridad:'LC',freq:{low:1624, midl:193216,midh:52594, high:7714}}
+                ,{escolaridad:'POI',freq:{low:128, midl:426,midh:83, high:16}}
+                ,{escolaridad:'POC',freq:{low:1699, midl:12899,midh:2947, high:371}}
+            ];
+
+            dashboard('#dashboard',freqData);
+        </script>
+
+
+    </div>
+
+
+
+    <!-- Hacia abajo hay cosas que pueden ser útiles para experimentar o bien borrarse para siempre -->
+
+    <!-- Estilo del anuncio
+     .campaign-banner{
+     background-image: url( http://www.gob.mx/cms/uploads/organization/main_image/51/zika_1.jpg);
+     background-repeat: no-repeat;
+     min-height: 250px;
+     background-position: center;
+     }-->
+
+     <!--<div class="container-fluid">
+
+         <h1>Anuncio</h1>
+
+         <div class="well">
+             <a href="http://www.gob.mx/chikungunya-dengue">
+                 <div class="campaign-banner" >-->
+                    <!--<span class="pull-right ad-sign">Anuncio</span> -->
+    <!-- </div>
+ </a>
+
+</div>
+
+</div>-->
+
+    <!--<svg width="100" height="150">
+        <rect x="0" width="15" fill="#d1c9b8"></rect>
+        <rect x="25" width="15" fill="#d1c9b8"></rect>
+        <rect x="50" width="15" fill="#d1c9b8"></rect>
+        <rect x="75" width="15" fill="#d1c9b8"></rect>
+    </svg>
+
+    <script>
+        var ratData = [ 400, 900, 300, 600 ];
+        d3.selectAll( "rect" )
+            .data( ratData )
+            .attr( "height", function(d){
+                return d/10 * 1.5;
+            })
+            .attr( "y", function(d){
+                return 150 - d/10 * 1.5;
+            });
+    </script>
+
+    <p>
+        <label for="nHeight"
+               style="display: inline-block; width: 240px; text-align: right">
+            height = <span id="nHeight-value">…</span>
+        </label>
+        <input type="range" min="1" max="280" id="nHeight">
+    </p>
+
+    <p>
+        <label for="nWidth"
+               style="display: inline-block; width: 240px; text-align: right">
+            width = <span id="nWidth-value">…</span>
+        </label>
+        <input type="range" min="1" max="400" id="nWidth">
+    </p>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script>
+
+        var width = 600;
+        var height = 300;
+
+        var holder = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // draw a rectangle
+        holder.append("rect")
+            .attr("x", 300)
+            .attr("y", 150)
+            .style("fill", "none")
+            .style("stroke", "blue")
+            .attr("height", 150)
+            .attr("width", 200);
+
+        // read a change in the height input
+        d3.select("#nHeight").on("input", function() {
+            updateHeight(+this.value);
+        });
+
+        // read a change in the width input
+        d3.select("#nWidth").on("input", function() {
+            updateWidth(+this.value);
+        });
+
+        // update the values
+        updateHeight(150);
+        updateWidth(100);
+
+        // Update the height attributes
+        function updateHeight(nHeight) {
+
+            // adjust the text on the range slider
+            d3.select("#nHeight-value").text(nHeight);
+            d3.select("#nHeight").property("value", nHeight);
+
+            // update the rectangle height
+            holder.selectAll("rect")
+                .attr("y", 150-(nHeight/2))
+                .attr("height", nHeight);
+        }
+
+        // Update the width attributes
+        function updateWidth(nWidth) {
+
+            // adjust the text on the range slider
+            d3.select("#nWidth-value").text(nWidth);
+            d3.select("#nWidth").property("value", nWidth);
+
+            // update the rectangle width
+            holder.selectAll("rect")
+                .attr("x", 300-(nWidth/2))
+                .attr("width", nWidth);
+        }
+
+    </script>-->
+</body>
+</html>
