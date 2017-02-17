@@ -12,8 +12,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/miipps">Comparativo</a></li>
-                <li class="active"><a href="/miipps">Análisis</a></li>
+                <li class="<%= section == 'bubbles'? 'active': ''%>"><a href="/bubbles">Bubbles</a></li>
+                <li class="<%= section == 'pruebas'? 'active': ''%>"><a href="/pruebas">Pruebas</a></li>
+                <li class="<%= section == 'comparativo'? 'active': ''%>"><a href="/miipps">Comparativo</a></li>
+                <li class="<%= section == 'analisis'? 'active': ''%>"><a href="/miipps">Análisis</a></li>
                 <!--<li class="active"><a href="/miipps">Ítem</a></li>-->
             </ul>
 

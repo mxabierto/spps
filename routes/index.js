@@ -122,10 +122,19 @@ router.get('/', function (req, res) {
 });
 
 
+/* GET bubbles. */
+router.get('/bubbles', function (req, res) {
+    db.manyOrNone('select * from unidad',[]).then(function ( data ) {
+        res.render('bubbles', {title: 'MIIPPS: Bubbles',unidades: data, section: 'miipps'  });
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 /* GET pruebas. */
 router.get('/pruebas', function (req, res) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
-        res.render('pruebas', {title: 'pruebas MIIPPS',unidades: data, section: 'miipps'  });
+        res.render('pruebas', {title: 'MIIPPS: Pruebas',unidades: data, section: 'miipps'  });
     }).catch(function (error) {
         console.log(error);
     });
@@ -190,9 +199,13 @@ router.post('/ficha/', function (req, res ) {
 router.post('/tabla-indicador/', function(req, res){
     var id_ficha = req.body.id_ficha;
     if (id_ficha != '' && id_ficha != null ) {
-        db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni, round(cast(100*sum(indicador.numerador)/sum(indicador.denominador) as numeric),2) as vali, entidad.nombre, (select color from meta where ' +
-            'id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color '+
-            'from indicador, entidad where  indicador.entidad = entidad.id and indicador.anio=2015 and id_ficha= $1 group by entidad.nombre order by entidad.nombre',[ id_ficha ]).then(function(data){
+        db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni,' +
+            'round(cast(COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))as numeric),2) as vali,' +
+            ' entidad.nombre, (select color from meta where ' +
+            'id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))' +
+            ' and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) ' +
+            'and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and ' +
+            ' id_ficha= $1 and indicador.anio=2015 group by entidad.nombre order by entidad.nombre',[        id_ficha       ]).then(function(data){
             if (data.length){
                 res.render('tabla_indicador', { datos: data }  );
             }else{
@@ -212,8 +225,10 @@ router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
     db.manyOrNone ('select entidad.id, '+
-        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color'+
-        ' from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),' +
+        'sum(indicador.valor)) and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) and (meta.anio = avg(indicador.anio)' +
+        ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2' +
+        ' group by entidad.id',[
         req.body.id,
         req.body.anio
     ]).then(function (data) {
