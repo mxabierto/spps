@@ -375,45 +375,47 @@ router.post('/indicador', isAuthenticated, function (req, res) {
 });
 
 router.post('/captura/guardar', isAuthenticated,function ( req, res) {
-console.log(req.body);
-    db.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
-        +req.body.id_ficha,
-        +req.body.entidad,
-        +req.body.anio
-    ]).then(function (data) {
+    console.log(req.body);
+    db.task(function(t){
+        return t.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
+            +req.body.id_ficha,
+            +req.body.entidad,
+            +req.body.anio
+        ]).then(function (data) {
 
-        if (data.count > 0 ){
-            return db.one('update indicador set numerador = $4, denominador = $5, valor = $6 where id_ficha=$1 and entidad=$2 and anio=$3 returning id_ficha', [
-                +req.body.id_ficha,
-                +req.body.entidad,
-                +req.body.anio,
-                +req.body.numerador,
-                +req.body.denominador,
-                +req.body.valor
-            ]);
-        }else {
-            return db.one('insert into indicador (id_ficha, entidad, anio, numerador, denominador, valor ) values ($1, $2, $3, $4, $5, $6) returning id_ficha', [
-                +req.body.id_ficha,
-                +req.body.entidad,
-                +req.body.anio,
-                +req.body.numerador,
-                +req.body.denominador,
-                +req.body.valor
-            ]);
-        }
+            if (data.count > 0 ){
+                return t.one('update indicador set numerador = $4, denominador = $5, valor = $6 where id_ficha=$1 and entidad=$2 and anio=$3 returning id_ficha', [
+                    +req.body.id_ficha,
+                    +req.body.entidad,
+                    +req.body.anio,
+                    +req.body.numerador,
+                    +req.body.denominador,
+                    +req.body.valor
+                ]);
+            }else {
+                return t.one('insert into indicador (id_ficha, entidad, anio, numerador, denominador, valor ) values ($1, $2, $3, $4, $5, $6) returning id_ficha', [
+                    +req.body.id_ficha,
+                    +req.body.entidad,
+                    +req.body.anio,
+                    +req.body.numerador,
+                    +req.body.denominador,
+                    +req.body.valor
+                ]);
+            }
+    });
 
     }).then(function (data) {
         console.log( data );
         res.json({
-           status: 'Ok',
+            status: 'Ok',
             message: 'Datos guardados'
         });
     }).catch(function (error) {
-       console.log(error);
-       res.json({
-           status: 'Error',
-           message: 'Ocurrió un error al guardar los datos'
-       })
+        console.log(error);
+        res.json({
+            status: 'Error',
+            message: 'Ocurrió un error al guardar los datos'
+        })
     });
 
 
