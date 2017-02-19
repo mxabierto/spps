@@ -65,7 +65,7 @@ var map_pagination = $('#anios');
 function color( val ) {
     switch ( val ){
         case 0:
-            return '#a65fc6';
+            return '#343538';//'#a65fc6';
             break;
         case 1:
             return '#ff6363 ';
@@ -84,7 +84,7 @@ function color( val ) {
             break;
     }
 
-    return 'grey';
+    return '#edeff2';//'grey';
 }
 
 select_unidad.change(function () {
