@@ -16,38 +16,34 @@ function main() {
     }).error(function (error) {
         console.log(err);
     });
-      /*  .done(function(vis, layers) {        https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed<--Mapa de estados
-            // layer 0 is the base layer, layer 1 is cartodb layer
-            // setInteraction is disabled by default
-            layers[1].setInteraction(true);
-            layers[1].on('featureOver', function(e, latlng, pos, data) {
-                cartodb.log.log(e, latlng, pos, data);
-            })
-
-            // getting the native map to work with it
-            var map = vis.getNativeMap();
-
-            //creating sublayers
-            cartodb.createLayer(map, {
-                user_name: 'karennz23',
-                type: 'cartodb',
-                sublayers: [
-                    {
-                        sql: "SELECT * FROM entidades where cov_id=2",
-                        cartocss: '#entidades {polygon-fill: #ff2200;}'
-                    },
-                    {
-                        sql: "SELECT * FROM entidades where cov_id=3",
-                        cartocss: '#entidades {polygon-fill: #00d667;}'
-                    }
-                ]
-            }).addTo(map)
-
-
-        })
-        .error(function(err) {
-            console.log(err);
-        });*/
+    /*  .done(function(vis, layers) {        https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed<--Mapa de estados
+     // layer 0 is the base layer, layer 1 is cartodb layer
+     // setInteraction is disabled by default
+     layers[1].setInteraction(true);
+     layers[1].on('featureOver', function(e, latlng, pos, data) {
+     cartodb.log.log(e, latlng, pos, data);
+     })
+     // getting the native map to work with it
+     var map = vis.getNativeMap();
+     //creating sublayers
+     cartodb.createLayer(map, {
+     user_name: 'karennz23',
+     type: 'cartodb',
+     sublayers: [
+     {
+     sql: "SELECT * FROM entidades where cov_id=2",
+     cartocss: '#entidades {polygon-fill: #ff2200;}'
+     },
+     {
+     sql: "SELECT * FROM entidades where cov_id=3",
+     cartocss: '#entidades {polygon-fill: #00d667;}'
+     }
+     ]
+     }).addTo(map)
+     })
+     .error(function(err) {
+     console.log(err);
+     });*/
 
 }
 window.onload = main;
@@ -173,7 +169,6 @@ function pintar (i, color) {
 /*
  function  pintar(i, color) {
  //clear map
-
  cartodb.createLayer(map, {
  user_name: 'karennz23',
  type: 'cartodb',
@@ -186,17 +181,16 @@ function pintar (i, color) {
  }).addTo(map)
  }*/
 /*Pintar municipios*//*
-function pintar (i, color) {
-//clear map
-
-    cartodb.createLayer(map, {
-        user_name: 'karennz23',
-        type: 'cartodb',
-        sublayers: [
-            {
-                sql: "SELECT * FROM municipal_juris where cvegeo="+i,
-                cartocss: '#municipal_juris {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
-            }
-        ]
-    }).addTo(map)
-}*/
+ function pintar (i, color) {
+ //clear map
+ cartodb.createLayer(map, {
+ user_name: 'karennz23',
+ type: 'cartodb',
+ sublayers: [
+ {
+ sql: "SELECT * FROM municipal_juris where cvegeo="+i,
+ cartocss: '#municipal_juris {polygon-fill: '+color+';line-width: 2;line-opacity: 0.5;}'
+ }
+ ]
+ }).addTo(map)
+ }*/
