@@ -61,19 +61,19 @@ var map_pagination = $('#anios');
 function color( val ) {
     switch ( val ){
         case 0:
-            return '#343538';//'#a65fc6';
+            return '#565656';//'#a65fc6';
             break;
         case 1:
-            return '#ff6363 ';
+            return '#ff0000 ';
             break;
         case 2:
-            return '#fff547';
+            return '#faff00';//'#fff547';
             break;
         case 3:
-            return '#00d667';
+            return '#28b72d';// '#00d667';
             break;
         case 4:
-            return '#ffb351';
+            return '#ffa323';//'#ffb351';
             break;
         case 5:
             return '#42a1f4';
