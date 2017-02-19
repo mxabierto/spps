@@ -74,10 +74,10 @@
         <script>
             function dashboard(id, fData){
                 var barColor = 'steelblue';
-                function segColor(c){ return {muy_bajo:"#807dba", bajo:"#e08214",alto:"#41ab5d",normal:"#42a1f4"}[c]; }
+                function segColor(c){ return {bajo_2500:"#807dba", normal_3500:"#e08214",alto_mas:"#41ab5d",alto_4000:"#42a1f4"}[c]; }
 
                 // Calcula el total por estado.
-                fData.forEach(function(d){d.total=d.freq.muy_bajo+d.freq.bajo+d.freq.alto+d.freq.normal;});
+                fData.forEach(function(d){d.total=d.freq.bajo_2500+d.freq.normal_3500+d.freq.alto_4000+d.freq.alto_mas;});
 
                 // function to handle histogram.
                 function histoGram(fD){
@@ -257,7 +257,7 @@
                 }
 
                 // calculate total frequency by segment for all escolaridad.
-                var tF = ['muy_bajo','bajo','normal','alto'].map(function(d){
+                var tF = ['bajo_2500','normal_3500','alto_4000','alto_mas'].map(function(d){
                     return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))};
                 });
 
@@ -272,17 +272,17 @@
 
         <script>
             var freqData=[
-                {escolaridad:'Ninguna',freq:{muy_bajo:2689, bajo:33520,normal:8394, alto:1495}}
-                ,{escolaridad:'PI',freq:{muy_bajo:4621, bajo:54991,normal:14403, alto:2480}}
-                ,{escolaridad:'Primaria',freq:{muy_bajo:12909, bajo:159101,normal:42258, alto:6979}}
-                ,{escolaridad:'SI',freq:{muy_bajo:7093, bajo:83013,normal:20448, alto:3113}}
-                ,{escolaridad:'Secundaria',freq:{muy_bajo:37573, bajo:452480,normal:122742, alto:19338}}
-                ,{escolaridad:'BI',freq:{muy_bajo:25602, bajo:108763,normal:27059, alto:3954}}
-                ,{escolaridad:'Bachillerato',freq:{muy_bajo:18337, bajo:306737,normal:83949, alto:12806}}
-                ,{escolaridad:'GI',freq:{muy_bajo:43, bajo:18920,normal:5249, alto:787}}
-                ,{escolaridad:'Grado',freq:{muy_bajo:1624, bajo:193216,normal:52594, alto:7714}}
-                ,{escolaridad:'PosI',freq:{muy_bajo:128, bajo:426,normal:83, alto:16}}
-                ,{escolaridad:'Posgrado',freq:{muy_bajo:1699, bajo:12899,normal:2947, alto:371}}
+                {escolaridad:'Ninguna',freq:{bajo_2500:2689, normal_3500:33520,alto_4000:8394, alto_mas:1495}}
+                ,{escolaridad:'PI',freq:{bajo_2500:4621, normal_3500:54991,alto_4000:14403, alto_mas:2480}}
+                ,{escolaridad:'Primaria',freq:{bajo_2500:12909, normal_3500:159101,alto_4000:42258, alto_mas:6979}}
+                ,{escolaridad:'SI',freq:{bajo_2500:7093, normal_3500:83013,alto_4000:20448, alto_mas:3113}}
+                ,{escolaridad:'Secundaria',freq:{bajo_2500:37573, normal_3500:452480,alto_4000:122742, alto_mas:19338}}
+                ,{escolaridad:'BI',freq:{bajo_2500:25602, normal_3500:108763,alto_4000:27059, alto_mas:3954}}
+                ,{escolaridad:'Bachillerato',freq:{bajo_2500:18337, normal_3500:306737,alto_4000:83949, alto_mas:12806}}
+                ,{escolaridad:'GI',freq:{bajo_2500:43, normal_3500:18920,alto_4000:5249, alto_mas:787}}
+                ,{escolaridad:'Grado',freq:{bajo_2500:1624, normal_3500:193216,alto_4000:52594, alto_mas:7714}}
+                ,{escolaridad:'PosI',freq:{bajo_2500:128, normal_3500:426,alto_4000:83, alto_mas:16}}
+                ,{escolaridad:'Posgrado',freq:{bajo_2500:1699, normal_3500:12899,alto_4000:2947, alto_mas:371}}
             ];
 
             dashboard('#dashboard',freqData);
@@ -291,128 +291,5 @@
 
     </div>
 
-
-
-    <!-- Hacia abajo hay cosas que pueden ser útiles para experimentar o bien borrarse para siempre -->
-
-    <!-- Estilo del anuncio
-     .campaign-banner{
-     background-image: url( http://www.gob.mx/cms/uploads/organization/main_image/51/zika_1.jpg);
-     background-repeat: no-repeat;
-     min-height: 250px;
-     background-position: center;
-     }-->
-
-     <!--<div class="container-fluid">
-
-         <h1>Anuncio</h1>
-
-         <div class="well">
-             <a href="http://www.gob.mx/chikungunya-dengue">
-                 <div class="campaign-banner" >-->
-                    <!--<span class="pull-right ad-sign">Anuncio</span> -->
-    <!-- </div>
- </a>
-
-</div>
-
-</div>-->
-
-    <!--<svg width="100" height="150">
-        <rect x="0" width="15" fill="#d1c9b8"></rect>
-        <rect x="25" width="15" fill="#d1c9b8"></rect>
-        <rect x="50" width="15" fill="#d1c9b8"></rect>
-        <rect x="75" width="15" fill="#d1c9b8"></rect>
-    </svg>
-
-    <script>
-        var ratData = [ 400, 900, 300, 600 ];
-        d3.selectAll( "rect" )
-            .data( ratData )
-            .attr( "height", function(d){
-                return d/10 * 1.5;
-            })
-            .attr( "y", function(d){
-                return 150 - d/10 * 1.5;
-            });
-    </script>
-
-    <p>
-        <label for="nHeight"
-               style="display: inline-block; width: 240px; text-align: right">
-            height = <span id="nHeight-value">…</span>
-        </label>
-        <input type="range" min="1" max="280" id="nHeight">
-    </p>
-
-    <p>
-        <label for="nWidth"
-               style="display: inline-block; width: 240px; text-align: right">
-            width = <span id="nWidth-value">…</span>
-        </label>
-        <input type="range" min="1" max="400" id="nWidth">
-    </p>
-
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script>
-
-        var width = 600;
-        var height = 300;
-
-        var holder = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
-
-        // draw a rectangle
-        holder.append("rect")
-            .attr("x", 300)
-            .attr("y", 150)
-            .style("fill", "none")
-            .style("stroke", "blue")
-            .attr("height", 150)
-            .attr("width", 200);
-
-        // read a change in the height input
-        d3.select("#nHeight").on("input", function() {
-            updateHeight(+this.value);
-        });
-
-        // read a change in the width input
-        d3.select("#nWidth").on("input", function() {
-            updateWidth(+this.value);
-        });
-
-        // update the values
-        updateHeight(150);
-        updateWidth(100);
-
-        // Update the height attributes
-        function updateHeight(nHeight) {
-
-            // adjust the text on the range slider
-            d3.select("#nHeight-value").text(nHeight);
-            d3.select("#nHeight").property("value", nHeight);
-
-            // update the rectangle height
-            holder.selectAll("rect")
-                .attr("y", 150-(nHeight/2))
-                .attr("height", nHeight);
-        }
-
-        // Update the width attributes
-        function updateWidth(nWidth) {
-
-            // adjust the text on the range slider
-            d3.select("#nWidth-value").text(nWidth);
-            d3.select("#nWidth").property("value", nWidth);
-
-            // update the rectangle width
-            holder.selectAll("rect")
-                .attr("x", 300-(nWidth/2))
-                .attr("width", nWidth);
-        }
-
-    </script>-->
 </body>
 </html>
