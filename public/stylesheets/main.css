@@ -651,3 +651,8 @@ p.cover-image                               { margin-top: 30px; text-align: cent
 .guide #dgm-sidebar .guide-navigation .item-resources a     { font-weight: normal; }
 .guide #dgm-sidebar .guide-navigation li:last-child         { margin-bottom: 0; }
 
+/***********************
+    Map Visualization
+***********************/
+#map-popup                                  { display: none; width: 180px; background-color: #fff; border-radius: 5px; position: absolute; z-index: 9999; }
+#map-popup .table > tbody > tr > td         { font-size: 11px; }

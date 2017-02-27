@@ -1,5 +1,6 @@
 var map;
 var states;
+var selected_year;
 var years_data;
 var geojson_states;
 
@@ -79,7 +80,9 @@ function _setPagination () {
                 id      : pag_el.data( 'id_ficha' ),
                 anio    : pag_el.data( 'anio' )
             }, function( data ){
-                years_data  = data;
+                years_data      = data;
+                selected_year   = pag_el.data( 'anio' );
+
                 draw_states();
             });
         });
@@ -90,9 +93,11 @@ function _setPagination () {
 }
 
 function _onFeature ( feature, drawnLayer ) {
-    var el  = _.findWhere( years_data, {
-        nombre  : feature.properties.NOM_ENT
-    });
+    var el      = _.findWhere( years_data, {
+            nombre  : feature.properties.NOM_ENT
+        }),
+        popupEl = $( '#map-popup' );
+
 
     drawnLayer.setStyle({
         color       : '#ffffff',
@@ -101,6 +106,27 @@ function _onFeature ( feature, drawnLayer ) {
         fillColor   : color( el && el.color || -1 ),
         fillOpacity : 1
     });
+
+    if ( el ) {
+        feature.properties.indicator    = el.color;
+    }
+
+    ( function ( layer, feature ) {
+        layer.on( 'mouseover', function ( e ) {
+            popupEl.stop().css({
+                left    : e.originalEvent.clientX + 50,
+                top     : e.originalEvent.clientY + 150
+            }).fadeIn();
+
+            $( '.data-state', popupEl ).html( feature.properties.NOM_ENT );
+            $( '.data-year', popupEl ).html( selected_year );
+            $( '.data-indicator', popupEl ).html( feature.properties.indicator );
+        });
+
+        layer.on( 'mouseout', function () {
+            popupEl.stop().fadeOut();
+        });
+    })( drawnLayer, feature );
 }
 
 function draw_states () {
