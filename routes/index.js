@@ -30,7 +30,6 @@ router.use(flash());
 var bCrypt = require('bcrypt-nodejs');
 var LocalStrategy = require('passport-local').Strategy;
 
-
 passport.use('login', new LocalStrategy({
         passReqToCallback : true
     },
@@ -95,12 +94,10 @@ var isNotAuthenticated = function (req, res, next) {
     res.redirect('/principal');
 };
 
-
 // Generates hash using bCrypt
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
-
 
 /* Handle Login POST */
 router.post('/login', passport.authenticate('login', {
@@ -120,7 +117,6 @@ router.get('/signout', function(req, res) {
 router.get('/', function (req, res) {
     res.render('index', {title: 'MIIPPS', message: req.flash('message') });
 });
-
 
 /* GET bubbles. */
 router.get('/bubbles', function (req, res) {
@@ -159,7 +155,6 @@ router.get('/pruebas', function (req, res) {
 });
 
 router.get('/miipps', isAuthenticated, function(req, res, next) {
-
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
         res.render('miipps', { title: 'MIIPPS',unidades: data, section: 'miipps' });
@@ -168,7 +163,6 @@ router.get('/miipps', isAuthenticated, function(req, res, next) {
         console.log(error);
     });
 });
-
 
 router.post('/select-pae/', function (req,res ) {
     var unidad = req.body.unidad;
@@ -179,7 +173,6 @@ router.post('/select-pae/', function (req,res ) {
         console.log(error);
     })
 });
-
 
 router.post('/select-ficha/',function (req, res) {
     var id_pae = req.body.id_pae;
@@ -193,7 +186,6 @@ router.post('/select-ficha/',function (req, res) {
     });
 
 });
-
 
 router.post('/ficha/', function (req, res ) {
     var id_ficha = req.body.id_ficha;
@@ -242,7 +234,7 @@ router.post('/tabla-indicador/', function(req, res){
 router.post('/colores', function (req, res) {
     console.log('colores ',req.body.id);
 
-    db.manyOrNone ('select entidad.id, '+
+    db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, '+
         '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),' +
         'sum(indicador.valor)) and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) and (meta.anio = avg(indicador.anio)' +
         ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2' +
@@ -255,79 +247,15 @@ router.post('/colores', function (req, res) {
     }).catch(function (error) {
         console.log(error)
     })
-
-
 });
 
-/*Pintar municipios desde desagregado municipal*/
-/*
-router.post('/colores', function (req, res) {
- console.log('colores ',req.body.id);
-
- db.manyOrNone ('select (indicador.entidad*1000+indicador.id_municipio) as id, '+
- '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
- 'indicador.anio from indicador where indicador.id_ficha= $1 and indicador.anio = $2 ',[
- req.body.id,
- req.body.anio
- ]).then(function (data) {
- console.log(data);
- res.json(data);
- }).catch(function (error) {
- console.log(error)
- })
-
- });*/
-
-/*Pintar jurisdicciones desde desagregado municipal o jurisdiccional*/
-/*
- router.post('/colores', function (req, res) {
- console.log('colores ',req.body.id);
-
- db.manyOrNone ('select (indicador.entidad*100+indicador.cve_jurisdiccion) as id, '+
- '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
- 'avg(indicador.anio) from indicador where indicador.id_ficha= $1 and indicador.anio = $2 group by indicador.entidad,indicador.cve_jurisdiccion',[
- req.body.id,
- req.body.anio
- ]).then(function (data) {
- console.log(data);
- res.json(data);
- }).catch(function (error) {
- console.log(error)
- })
-
- });*/
-
-/*Pintar estados solo desde desagregado estatal */
-/*
-router.post('/colores', function (req, res) {
-    console.log('colores ',req.body.id);
-
-    db.manyOrNone ('select entidad.id, '+
-    '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
-        'indicador.anio from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2',[
-            req.body.id,
-            req.body.anio
-    ]).then(function (data) {
-        console.log(data);
-        res.json(data);
-    }).catch(function (error) {
-        console.log(error)
-    })
-
-
-});*/
-
-
 router.post('/anios',function (req, res) {
-    db.manyOrNone('select distinct(anio) from indicador where id_ficha = $1 order by anio', [ req.body.id ]).then(function ( data ) {
+    db.manyOrNone('SELECT DISTINCT(anio) FROM indicador WHERE id_ficha = $1 ORDER BY anio', [ req.body.id ]).then(function ( data ) {
         res.render('anios', {anios: data, id_ficha: req.body.id  });
     }).catch(function (error) {
         console.log(error);
     });
-
-
 });
-
 
 router.get('/captura', isAuthenticated, function (req, res) {
 
@@ -349,7 +277,6 @@ router.get('/captura', isAuthenticated, function (req, res) {
     });
 
 });
-
 
 router.post('/indicador', isAuthenticated, function (req, res) {
     console.log(req.body);
