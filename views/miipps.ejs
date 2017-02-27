@@ -1,380 +1,264 @@
 <!DOCTYPE html>
 <html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title><%= title %></title>
+
+        <!-- Bootstrap -->
+        <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/stylesheets/main.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title><%= title %></title>
+        <style>
+            .circle { display: inline-block; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; position: relative; top: 2.5px; }
 
-    <!-- Bootstrap -->
-    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">-->
-    <link href="/stylesheets/main.css" rel="stylesheet">
+            body{
+                padding-top: 70px;
+            }
 
+            .axis text {
+                font: 10px sans-serif;
+            }
+            .axis path,
+            .axis line {
+                fill: none;
+                stroke: #000;
+                shape-rendering: crispEdges;
+            }
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+            .bar {
+                fill: #56baec;
+                fill-opacity: .8;
+            }
+            .bar:hover {
+                fill: steelblue ;
+            }
+            .x.axis path {
+                display: none;
+            }
 
+            #map {
+                height: 100%;
+                /*padding: 0;
+                margin: 0;*/
+                padding-top: 10px;
+            }
 
-    <style>
-        .circle { display: inline-block; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; position: relative; top: 2.5px; }
+            .campaign-banner{
+                background-image: url( http://www.gob.mx/cms/uploads/organization/main_image/51/zika_1.jpg);
+                background-repeat: no-repeat;
+                min-height: 250px;
+                background-position: center;
+            }
+        </style>
 
-        body{
-            padding-top: 70px;
-        }
-
-        .axis text {
-            font: 10px sans-serif;
-        }
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: #000;
-            shape-rendering: crispEdges;
-        }
-
-        .bar {
-            fill: #56baec;
-            fill-opacity: .8;
-        }
-        .bar:hover {
-            fill: steelblue ;
-        }
-        .x.axis path {
-            display: none;
-        }
-
-        #map {
-            height: 100%;
-            /*padding: 0;
-            margin: 0;*/
-            padding-top: 10px;
-        }
-
-        .campaign-banner{
-            background-image: url( http://www.gob.mx/cms/uploads/organization/main_image/51/zika_1.jpg);
-            background-repeat: no-repeat;
-            min-height: 250px;
-            background-position: center;
-        }
-    </style>
-
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
-    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
-</head>
+        <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    </head>
 <body>
-
-<% include navbar.ejs %>
-
-
-<div class="container-fluid">
-
-    <!-- <h1>Anuncio</h1>
-
-    <div class="well">
-        <a href="http://www.gob.mx/chikungunya-dengue">
-            <div class="campaign-banner" >
-                /////////////////////////////////////
+    <% include navbar.ejs %>
+    <div class="container-fluid">
+        <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
+        <div class="row">
+            <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
+                <label>Selecciona una unidad administrativa</label>
+                <select id="select_unidad" class="form-control">
+                    <option value="">-Unidad Administrativa-</option>
+                    <% for ( var i = 0; i < unidades.length; i++ ){ %>
+                        <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
+                    <%}%>
+                </select>
             </div>
-        </a>
-
-    </div>-->
-    <!--  Esto iba en ////////////////////////// arribita <span class="pull-right ad-sign">Anuncio</span>-->
-    <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
-
-    <div class="row">
-        <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
-            <label>Selecciona una unidad administrativa</label>
-            <select id="select_unidad" class="form-control">
-                <option value=0>-Unidad Administrativa-</option>
-                <%for( var i=0;i<unidades.length;i++){%>
-                <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
-                <%}%>
-            </select>
+            <div class="col-sm-4"><!-- Elección del PAE-->
+                <label>Selecciona un PAE</label>
+                <select id="select_pae" class="form-control">
+                    <option value="">-Programa de Acción Específico-</option>
+                </select>
+            </div>
+            <div class="col-sm-4"><!-- Elección de indicador-->
+                <label>Selecciona un indicador</label>
+                <select id="select_indicador" class="form-control">
+                    <option value="">-Indicador-</option>
+                </select>
+            </div>
         </div>
-        <div class="col-sm-4"><!-- Elección del PAE-->
-            <label>Selecciona un PAE</label>
-            <select id="select_pae" class="form-control">
-                <option value=0>-Programa de Acción Específico-</option>
-            </select>
-        </div>
-        <div class="col-sm-4"><!-- Elección de indicador-->
-            <label>Selecciona un indicador</label>
-            <select id="select_indicador" class="form-control">
-                <option value=0>-Indicador-</option>
-            </select>
-        </div>
+        <div id="anios" style="text-align: center"></div><!-- Elección de año-->
     </div>
-    <div id="anios" style="text-align: center"></div><!-- Elección de año-->
-    <!-- Elección de desagregación: -->
-    <!--<div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Desagregación
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
-            <li class="disabled"><a href="#">Estatal</a></li>
-            <li class="disabled"><a href="#">Jurisdiccional</a></li>
-            <li class="disabled"><a href="#">Municipal</a></li>
-        </ul>
-    </div>-->
-</div>
-
-<div id="map" style="height: 500px"></div>
-
-<div class="container-fluid">
-    <!--<br>
-    //<iframe width='100%' height='520' frameborder='0' src='https://karennz23.carto.com/builder/731e06d0-d629-11e6-902c-0ecd1babdde5/embed' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
--->
-
-    <h1>Ficha técnica</h1>
-    <div id ="ficha"></div>
-
-    <h1>Evaluación del desempeño</h1>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td><strong>Excelente&nbsp&nbsp&nbsp</strong></td>
-                <td><strong>Satisfactorio</strong></td>
-                <td><strong>Mínimo&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</strong></td>
-                <td><strong>Precario&nbsp&nbsp&nbsp&nbsp</strong></td>
-            </tr>
-            <tr>
-                <td><img align=center src=/img/verde.png width="48px"></td>
-                <td><img src=/img/amarillo.png width="48px"></td>
-                <td><img src=/img/rojo.png width="48px"></td>
-                <td><img src=/img/negro.png width="48px"></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h1>Indicadores por estado</h1>
-    <div id="tabla_indicador"></div>
-
-    <!-- BROONER CODE: Borrar desde aquí-->
-    <!--<a href="#" class="btn btn-default" style="text-align:right">Exportar</a>-->
-    <!-- BROONER CODE: Borrar hasta aquí-->
-
-</div>
-
-<!-- Gráfica de barras-->
-<div class="container-fluid">
-    <h1>Gráficos</h1>
-
-    <input type="checkbox"> Ordenar <br>
-
-    <div id="g1"></div>
-
-</div>
-
-<!--Tabla para exportar datos-->
-<div class="container-fluid statistics">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Datos</h1>
-            <div class="data-table">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <!--<th width="50%">Institución</th>-->
-                        <th width="30%">Institución</th>
-                        <th width="30%">Formato</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr id="api">
-
-                        <td>Indicador</td>
-                        <td>SSA</td>
-                        <td>
-                            <span class="label" data-format="csv">CSV</span>
-                            <!--<span class="label" data-format="xlsx">XLS</span>-->
-                            <!--<span class="label" data-format="pdf">PDF</span>-->
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+    <div id="map" style="height: 500px"></div>
+    <div class="container-fluid">
+        <h1>Ficha técnica</h1>
+        <div id ="ficha"></div>
+        <h1>Evaluación del desempeño</h1>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td><strong>Excelente&nbsp&nbsp&nbsp</strong></td>
+                    <td><strong>Satisfactorio</strong></td>
+                    <td><strong>Mínimo&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</strong></td>
+                    <td><strong>Precario&nbsp&nbsp&nbsp&nbsp</strong></td>
+                </tr>
+                <tr>
+                    <td><img align=center src=/img/verde.png width="48px"></td>
+                    <td><img src=/img/amarillo.png width="48px"></td>
+                    <td><img src=/img/rojo.png width="48px"></td>
+                    <td><img src=/img/negro.png width="48px"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h1>Indicadores por estado</h1>
+        <div id="tabla_indicador"></div>
+    </div>
+    <!-- Gráfica de barras-->
+    <div class="container-fluid">
+        <h1>Gráficos</h1>
+        <input type="checkbox"> Ordenar <br>
+        <div id="g1"></div>
+    </div>
+    <!--Tabla para exportar datos-->
+    <div class="container-fluid statistics">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Datos</h1>
+                <div class="data-table">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <!--<th width="50%">Institución</th>-->
+                            <th width="30%">Institución</th>
+                            <th width="30%">Formato</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr id="api">
+                            <td>Indicador</td>
+                            <td>SSA</td>
+                            <td>
+                                <span class="label" data-format="csv">CSV</span>
+                                <!--<span class="label" data-format="xlsx">XLS</span>-->
+                                <!--<span class="label" data-format="pdf">PDF</span>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bower_components/underscore/underscore-min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="/javascripts/main.js"></script>
+    <script>
+        var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 1000 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
 
+        // var formatPercent = d3.format(".1%");
 
-<script src="//d3js.org/d3.v3.min.js"></script>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
-<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
-<script src="/javascripts/main.js"></script>
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1, 1);
 
+        var y = d3.scale.linear()
+            .range([height, 0]);
 
-<script>
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = 1000 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+        //.tickFormat(formatPercent);
 
-    // var formatPercent = d3.format(".1%");
+        var svg = d3.select("#g1").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" +  margin.left + "," + margin.top + ")");
 
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1, 1);
+        d3.json('/miipps/159/159/2015', function(error, data) {
 
-    var y = d3.scale.linear()
-        .range([height, 0]);
+            data.forEach(function(d) {
+                d.valor = +d.valor;
+            });
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+            x.domain(data.map(function(d) { return d.entidad; }));
+            y.domain([0, d3.max(data, function(d) { return d.valor; })]);
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-    //.tickFormat(formatPercent);
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
 
-    var svg = d3.select("#g1").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" +  margin.left + "," + margin.top + ")");
-
-    d3.json('/miipps/159/159/2015', function(error, data) {
-
-        data.forEach(function(d) {
-            d.valor = +d.valor;
-        });
-
-        x.domain(data.map(function(d) { return d.entidad; }));
-        y.domain([0, d3.max(data, function(d) { return d.valor; })]);
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Desempeño");
-
-        svg.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) { return x(d.entidad); })
-            .attr("width", x.rangeBand())
-            .attr("y", function(d) { return y(d.valor); })
-            .attr("height", function(d) { return height - y(d.valor); });
-
-        d3.select("input").on("change", change);
-
-        var sortTimeout = setTimeout(function() {
-            d3.select("input").property("checked", true).each(change);
-        }, 2000);
-
-        function change() {
-            clearTimeout(sortTimeout);
-
-            // Copy-on-write since tweens are evaluated after a delay.
-            var x0 = x.domain(data.sort(this.checked
-                ? function(a, b) { return a.valor - b.valor; }
-                : function(a, b) { return d3.ascending(a.entidad, b.entidad); })
-                .map(function(d) { return d.entidad; }))
-                .copy();
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Desempeño");
 
             svg.selectAll(".bar")
-                .sort(function(a, b) { return x0(a.entidad) - x0(b.entidad); });
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d) { return x(d.entidad); })
+                .attr("width", x.rangeBand())
+                .attr("y", function(d) { return y(d.valor); })
+                .attr("height", function(d) { return height - y(d.valor); });
 
-            var transition = svg.transition().duration(750),
-                delay = function(d, i) { return i * 50; };
+            d3.select("input").on("change", change);
 
-            transition.selectAll(".bar")
-                .delay(delay)
-                .attr("x", function(d) { return x0(d.entidad); });
+            var sortTimeout = setTimeout(function() {
+                d3.select("input").property("checked", true).each(change);
+            }, 2000);
 
-            transition.select(".x.axis")
-                .call(xAxis)
-                .selectAll("g")
-                .delay(delay);
-        }
-    });
+            function change() {
+                clearTimeout(sortTimeout);
 
-</script>
+                // Copy-on-write since tweens are evaluated after a delay.
+                var x0 = x.domain(data.sort(this.checked
+                    ? function(a, b) { return a.valor - b.valor; }
+                    : function(a, b) { return d3.ascending(a.entidad, b.entidad); })
+                    .map(function(d) { return d.entidad; }))
+                    .copy();
 
-<!-- BROONER CODE: Borrar desde aquí-->
-<script>
-    $(document).ready(function () {
+                svg.selectAll(".bar")
+                    .sort(function(a, b) { return x0(a.entidad) - x0(b.entidad); });
 
-        function exportTableToCSV($table, filename) {
+                var transition = svg.transition().duration(750),
+                    delay = function(d, i) { return i * 50; };
 
-            var $rows = $table.find('tr:has(td)'),
+                transition.selectAll(".bar")
+                    .delay(delay)
+                    .attr("x", function(d) { return x0(d.entidad); });
 
-                // Temporary delimiter characters unlikely to be typed by keyboard
-                // This is to avoid accidentally splitting the actual contents
-                tmpColDelim = String.fromCharCode(11), // vertical tab character
-                tmpRowDelim = String.fromCharCode(0), // null character
-
-                // actual delimiter characters for CSV format
-                colDelim = '","',
-                rowDelim = '"\r\n"',
-
-                // Grab text from table into CSV formatted string
-                csv = '"' + $rows.map(function (i, row) {
-                        var $row = $(row),
-                            $cols = $row.find('td');
-
-                        return $cols.map(function (j, col) {
-                            var $col = $(col),
-                                text = $col.text();
-
-                            return text.replace(/"/g, '""'); // escape double quotes
-
-                        }).get().join(tmpColDelim);
-
-                    }).get().join(tmpRowDelim)
-                        .split(tmpRowDelim).join(rowDelim)
-                        .split(tmpColDelim).join(colDelim) + '"',
-
-                // Data URI
-                csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
-
-            $(this)
-                .attr({
-                    'download': filename,
-                    'href': csvData,
-                    'target': '_blank'
-                });
-        }
-
-        // This must be a hyperlink
-        $(".export").on('click', function (event) {
-            // CSV
-            exportTableToCSV.call(this, $('#tabla_indicador>table'), 'export.csv');
-
-            // IF CSV, don't do event.preventDefault() or return false
-            // We actually need this to be a typical hyperlink
+                transition.select(".x.axis")
+                    .call(xAxis)
+                    .selectAll("g")
+                    .delay(delay);
+            }
         });
-    });
-</script>
-<!-- BROONER CODE: Borrar hasta aquí-->
-
-
-
-</body>
+    </script>
+    </body>
 </html>
