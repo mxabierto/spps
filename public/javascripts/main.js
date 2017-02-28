@@ -24,22 +24,22 @@ function select_unidad_cb () {
 function color( val ) {
     switch ( val ){
         case 0:
-            return '#565656';
+            return '#484848';
             break;
         case 1:
-            return '#ff0000';
+            return '#E24A4A';
             break;
         case 2:
-            return '#faff00';
+            return '#FFD200';
             break;
         case 3:
-            return '#28b72d';
+            return '#07C2A7';
             break;
         case 4:
-            return '#ffa323';
+            return '#FF864E';
             break;
         case 5:
-            return '#42a1f4';
+            return '#2658A8';
             break;
     }
 
@@ -221,7 +221,7 @@ function _onFeature ( feature, drawnLayer ) {
         color       : '#ffffff',
         opacity     : 1,
         weight      : 1,
-        fillColor   : color( el && el.color || -1 ),
+        fillColor   : ( el && el.color !== undefined ) ? color( el.color ) : color( -1 ),
         fillOpacity : 1
     });
 
@@ -238,7 +238,7 @@ function _onFeature ( feature, drawnLayer ) {
 
             $( '.data-state', popupEl ).html( feature.properties.NOM_ENT );
             $( '.data-year', popupEl ).html( selected_year );
-            $( '.data-indicator', popupEl ).html( feature.properties.indicator );
+            $( '.data-indicator', popupEl ).html( feature.properties.indicator || 'No hay datos' );
         });
 
         layer.on( 'mouseout', function () {

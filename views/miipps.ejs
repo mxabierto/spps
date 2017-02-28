@@ -65,123 +65,147 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
     </head>
-<body>
-    <% include navbar.ejs %>
-    <div class="container-fluid">
-        <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
-        <div class="row">
-            <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
-                <label>Selecciona una unidad administrativa</label>
-                <select id="select_unidad" class="form-control">
-                    <option value="">-Unidad Administrativa-</option>
-                    <% for ( var i = 0; i < unidades.length; i++ ){ %>
-                        <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
-                    <%}%>
-                </select>
+    <body>
+        <% include navbar.ejs %>
+        <div class="container-fluid">
+            <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
+            <div class="row">
+                <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
+                    <label>Selecciona una unidad administrativa</label>
+                    <select id="select_unidad" class="form-control">
+                        <option value="">-Unidad Administrativa-</option>
+                        <% for ( var i = 0; i < unidades.length; i++ ){ %>
+                            <option value="<%= unidades[i].nombre%>"><%= unidades[i].nombre%></option>
+                        <%}%>
+                    </select>
+                </div>
+                <div class="col-sm-4"><!-- Elección del PAE-->
+                    <label>Selecciona un PAE</label>
+                    <select id="select_pae" class="form-control">
+                        <option value="">-Programa de Acción Específico-</option>
+                    </select>
+                </div>
+                <div class="col-sm-4"><!-- Elección de indicador-->
+                    <label>Selecciona un indicador</label>
+                    <select id="select_indicador" class="form-control">
+                        <option value="">-Indicador-</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-sm-4"><!-- Elección del PAE-->
-                <label>Selecciona un PAE</label>
-                <select id="select_pae" class="form-control">
-                    <option value="">-Programa de Acción Específico-</option>
-                </select>
-            </div>
-            <div class="col-sm-4"><!-- Elección de indicador-->
-                <label>Selecciona un indicador</label>
-                <select id="select_indicador" class="form-control">
-                    <option value="">-Indicador-</option>
-                </select>
-            </div>
+            <div id="anios" style="text-align: center"></div><!-- Elección de año-->
         </div>
-        <div id="anios" style="text-align: center"></div><!-- Elección de año-->
-    </div>
-    <div id="map" style="height: 500px"></div>
-    <div id="map-popup">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td width="30%"><strong>Estado:</strong></td>
-                    <td width="70%"><span class="data-state"></span></td>
-                </tr>
-                <tr>
-                    <td width="30%"><strong>Año:</strong></td>
-                    <td width="70%"><span class="data-year"></span></td>
-                </tr>
-                <tr>
-                    <td width="30%"><strong>Indicador:</strong></td>
-                    <td width="70%"><span class="data-indicator"></span></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="container-fluid">
-        <h1>Evaluación del desempeño</h1>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td><strong>Excelente&nbsp&nbsp&nbsp</strong></td>
-                    <td><strong>Satisfactorio</strong></td>
-                    <td><strong>Mínimo&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</strong></td>
-                    <td><strong>Precario&nbsp&nbsp&nbsp&nbsp</strong></td>
-                </tr>
-                <tr>
-                    <td><img align=center src=/img/verde.png width="48px"></td>
-                    <td><img src=/img/amarillo.png width="48px"></td>
-                    <td><img src=/img/rojo.png width="48px"></td>
-                    <td><img src=/img/negro.png width="48px"></td>
-                </tr>
-            </tbody>
-        </table>
-        <h1>Ficha técnica</h1>
-        <div id ="ficha"></div>
-        <h1>Indicadores por estado</h1>
-        <div id="tabla_indicador"></div>
-    </div>
-    <!-- Gráfica de barras-->
-    <div class="container-fluid">
-        <h1>Gráficos</h1>
-        <input type="checkbox"> Ordenar <br>
-        <div id="g1"></div>
-    </div>
-    <!--Tabla para exportar datos-->
-    <div class="container-fluid statistics">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Datos</h1>
-                <div class="data-table">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <!--<th width="50%">Institución</th>-->
-                            <th width="30%">Institución</th>
-                            <th width="30%">Formato</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr id="api">
-                            <td>Indicador</td>
-                            <td>SSA</td>
-                            <td>
-                                <span class="label" data-format="csv">CSV</span>
-                                <!--<span class="label" data-format="xlsx">XLS</span>-->
-                                <!--<span class="label" data-format="pdf">PDF</span>-->
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div id="map" style="height: 500px"></div>
+        <div id="map-popup">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="30%"><strong>Estado:</strong></td>
+                        <td width="70%"><span class="data-state"></span></td>
+                    </tr>
+                    <tr>
+                        <td width="30%"><strong>Año:</strong></td>
+                        <td width="70%"><span class="data-year"></span></td>
+                    </tr>
+                    <tr>
+                        <td width="30%"><strong>Indicador:</strong></td>
+                        <td width="70%"><span class="data-indicator"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="container-fluid">
+            <h1>Evaluación del desempeño</h1>
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <p>Metas sexeniales</p>
+                    <ul class="graph-indicators graph-indicators-two">
+                        <li>
+                            <span class="graph-indicator graph-indicator__fulfillment"></span>
+                            <span>Cumplimiento de la meta sexenial</span>
+                        </li>
+                        <li>
+                            <span class="graph-indicator graph-indicator__under"></span>
+                            <span>Por debajo de la meta sexenial</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8">
+                    <p>Semáforo y rangos del indicador</p>
+                    <ul class="graph-indicators">
+                        <li>
+                            <span class="graph-indicator graph-indicator__excelent"></span>
+                            <span>Desempeño excelente</span>
+                        </li>
+                        <li>
+                            <span class="graph-indicator graph-indicator__regular"></span>
+                            <span>Desempeño regular</span>
+                        </li>
+                        <li>
+                            <span class="graph-indicator graph-indicator__bad"></span>
+                            <span>Desempeño malo</span>
+                        </li>
+                        <li>
+                            <span class="graph-indicator graph-indicator__insufficient"></span>
+                            <span>Desempeño precario</span>
+                        </li>
+                        <li>
+                            <span class="graph-indicator graph-indicator__no-data"></span>
+                            <span>No evaluado</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h1>Ficha técnica</h1>
+            <div id ="ficha"></div>
+            <h1>Indicadores por estado</h1>
+            <div id="tabla_indicador"></div>
+        </div>
+        <!-- Gráfica de barras-->
+        <div class="container-fluid">
+            <h1>Gráficos</h1>
+            <input type="checkbox"> Ordenar <br>
+            <div id="g1"></div>
+        </div>
+        <!--Tabla para exportar datos-->
+        <div class="container-fluid statistics">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Datos</h1>
+                    <div class="data-table">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <!--<th width="50%">Institución</th>-->
+                                <th width="30%">Institución</th>
+                                <th width="30%">Formato</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id="api">
+                                <td>Indicador</td>
+                                <td>SSA</td>
+                                <td>
+                                    <span class="label" data-format="csv">CSV</span>
+                                    <!--<span class="label" data-format="xlsx">XLS</span>-->
+                                    <!--<span class="label" data-format="pdf">PDF</span>-->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="//d3js.org/d3.v3.min.js"></script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/bower_components/underscore/underscore-min.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <script src="/javascripts/main.js"></script>
+        <script src="//d3js.org/d3.v3.min.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="/bower_components/underscore/underscore-min.js"></script>
+        <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+        <script src="https://d3js.org/topojson.v2.min.js"></script>
+        <script src="/javascripts/main.js"></script>
     </body>
 </html>
