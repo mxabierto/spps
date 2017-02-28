@@ -1,8 +1,10 @@
 var map;
 var states;
+var jurisdictions;
 var selected_year;
 var years_data;
 var geojson_states;
+var geojson_jurisdictions;
 
 //selects
 var select_unidad       = $( '#select_unidad' );
@@ -242,6 +244,31 @@ function _onFeature ( feature, drawnLayer ) {
         layer.on( 'mouseout', function () {
             popupEl.stop().fadeOut();
         });
+
+        layer.on( 'click', function ( e ) {
+            var selected_jurisdictions  = _.filter( jurisdictions.features, function ( f ) {
+                return f.properties.nom_ent == feature.properties.NOM_ENT;
+            });
+
+            if ( geojson_jurisdictions ) {
+                map.removeLayer( geojson_jurisdictions );
+            }
+
+            geojson_jurisdictions   = L.geoJson( selected_jurisdictions, {
+                onEachFeature   : function ( feature, layer ) {
+                    layer.setStyle({
+                        color       : '#ffffff',
+                        opacity     : 1,
+                        weight      : 1,
+                        fillColor   : '#333333',
+                        fillOpacity : 0
+                    });
+                }
+            });
+
+            geojson_jurisdictions.addTo( map );
+            map.setView( [ e.latlng.lat, e.latlng.lng ], 7 );
+        });
     })( drawnLayer, feature );
 }
 
@@ -262,6 +289,10 @@ function draw_states () {
 function main() {
     $.get( '/data/states_topo.json', function ( data ) {
         states  = topojson.feature( data, data.objects.states );
+    });
+
+    $.get( '/data/jurisdictions.json', function ( data ) {
+        jurisdictions   = data;
     });
 
     map   = L.map( 'map', {
