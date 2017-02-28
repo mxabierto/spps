@@ -154,7 +154,7 @@ router.get('/pruebas', function (req, res) {
     });
 });
 
-router.get('/miipps', isAuthenticated, function(req, res, next) {
+router.get( '/miipps', isAuthenticated, function( req, res, next ) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
         res.render('miipps', { title: 'MIIPPS',unidades: data, section: 'miipps' });
@@ -164,7 +164,7 @@ router.get('/miipps', isAuthenticated, function(req, res, next) {
     });
 });
 
-router.post('/select-pae/', function (req,res ) {
+router.post( '/select-pae/', function ( req,res ) {
     var unidad = req.body.unidad;
     console.log(unidad);
     db.manyOrNone('select * from pae where unidad = $1',[unidad]).then(function (data) {
@@ -174,7 +174,7 @@ router.post('/select-pae/', function (req,res ) {
     })
 });
 
-router.post('/select-ficha/',function (req, res) {
+router.post( '/select-ficha/',function ( req, res) {
     var id_pae = req.body.id_pae;
     console.log('id_pae ', id_pae);
 
@@ -187,51 +187,54 @@ router.post('/select-ficha/',function (req, res) {
 
 });
 
-router.post('/ficha/', function (req, res ) {
-    var id_ficha = req.body.id_ficha;
+router.post( '/ficha/', function ( req, res ) {
+    var id_ficha    = req.body.id_ficha;
 
-    if (id_ficha != '' && id_ficha != null) {
-        db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
-            if (data) {
-                res.render('ficha', {ficha: data});
-            }else{
-                res.send('<strong>Seleccione un indicador</strong>');
+    if ( id_ficha != '' && id_ficha != null ) {
+        db.oneOrNone( 'select * from ficha where id = $1', [ id_ficha ]).then(function ( data ) {
+            if ( data ) {
+                res.render( 'ficha', {
+                    ficha   : data
+                });
+            } else {
+                res.send( '<strong>Seleccione un indicador</strong>' );
             }
-        }).catch(function (error) {
-            console.log(error);
+        }).catch(function ( error ) {
+            console.log( error );
         });
-    }else {
-        res.send('<strong>Seleccione un indicador</strong>');
+    } else {
+        res.send( '<strong>Seleccione un indicador</strong>' );
     }
 });
-/*Desglose de valores estatales a partir de datos municipales, jurisdicccionales o estatales */
-/*Falta limitar indicador.anio....indicador.anio=2015 estaba, pero solo hay un año*/
-router.post('/tabla-indicador/', function(req, res){
-    var id_ficha = req.body.id_ficha;
-    if (id_ficha != '' && id_ficha != null ) {
-        db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni,' +
-            'round(cast(COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))as numeric),2) as vali,' +
-            ' entidad.nombre, (select color from meta where ' +
-            'id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))' +
-            ' and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) ' +
-            'and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and ' +
-            ' id_ficha= $1 and indicador.anio=2015 group by entidad.nombre order by entidad.nombre',[        id_ficha       ]).then(function(data){
-            if (data.length){
-                res.render('tabla_indicador', { datos: data }  );
-            }else{
-                res.send('<strong>Seleccione un indicador</strong>');
-            }
-        }).catch(function(error){
-            console.log(error);
-        });
-    }else {
-        res.send('<strong>Seleccione un indicador</strong>');
-    }
 
+router.post( '/tabla-indicador/', function( req, res ) {
+    var id_ficha    = req.body.id_ficha,
+        year        = req.body.year;
+
+    if ( id_ficha != '' && id_ficha != null && year != '' && year != null ) {
+        db.manyOrNone ( 'select round( avg( indicador.anio ) ) as anii, sum( indicador.numerador ) as numi, sum( indicador.denominador ) as deni,' +
+            'round( cast ( COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) as numeric ), 2 ) as vali,' +
+            ' entidad.nombre, ( select color from meta where ' +
+            'id_ficha = avg( indicador.id_ficha ) and min <= COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) )' +
+            ' and max > COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) ' +
+            'and ( meta.anio = avg( indicador.anio ) or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and ' +
+            ' id_ficha= $1 and indicador.anio = $2 group by entidad.nombre order by entidad.nombre', [ id_ficha, year ]).then( function( data ){
+            if ( data.length ){
+                res.render( 'tabla_indicador', {
+                    datos   : data
+                });
+            } else {
+                res.send( '<strong>Seleccione un indicador</strong>' );
+            }
+        }).catch( function( error ){
+            console.log( error );
+        });
+    } else {
+        res.send( '<strong>Seleccione un indicador</strong>' );
+    }
 });
-/*Pinta Estados a partir de cualquier desagregado */
-/*Cálculo de datos estatales con el método 100*num/den  */
-router.post('/colores', function (req, res) {
+
+router.post( '/colores', function ( req, res ) {
     console.log('colores ',req.body.id);
 
     db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, '+
@@ -249,7 +252,7 @@ router.post('/colores', function (req, res) {
     })
 });
 
-router.post('/anios',function (req, res) {
+router.post( '/anios', function ( req, res ) {
     db.manyOrNone('SELECT DISTINCT(anio) FROM indicador WHERE id_ficha = $1 ORDER BY anio', [ req.body.id ]).then(function ( data ) {
         res.render('anios', {anios: data, id_ficha: req.body.id  });
     }).catch(function (error) {

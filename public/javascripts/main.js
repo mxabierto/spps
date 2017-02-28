@@ -48,23 +48,22 @@ select_unidad.change( select_unidad_cb );
 
 select_pae.change( _paeSelected );
 
-select_indicador.change( _indicatorSelected );
+select_indicador.change( _setPagination );
 
-function _indicatorSelected () {
+function _loadIndicatorData () {
     ficha.load( '/ficha', {
         id_ficha    : select_indicador.val()
     });
     tabla_ind.load( '/tabla-indicador', {
-        id_ficha    : select_indicador.val()
+        id_ficha    : select_indicador.val(),
+        year        : selected_year
     });
-
-    _setPagination();
 }
 
 function _paeSelected () {
     select_indicador.load( '/select-ficha', {
         id_pae  : select_pae.val()
-    }, _indicatorSelected );
+    }, _setPagination );
 }
 
 function _setPagination () {
@@ -76,6 +75,7 @@ function _setPagination () {
             $( '.pagination li' ).removeClass( 'active' );
             var pag_el  = $( this );
             pag_el.addClass( 'active' );
+
             $.post( '/colores', {
                 id      : pag_el.data( 'id_ficha' ),
                 anio    : pag_el.data( 'anio' )
@@ -84,6 +84,7 @@ function _setPagination () {
                 selected_year   = pag_el.data( 'anio' );
 
                 draw_states();
+                _loadIndicatorData();
             });
         });
 
