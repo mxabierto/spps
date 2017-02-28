@@ -661,7 +661,7 @@ p.cover-image                               { margin-top: 30px; text-align: cent
 .graph-indicators > li                                      { display: inline-block; width: calc(20% - 3px); padding: 10px 5px; border-right: 1px solid #e0e0e0; text-align: center; font-size: 10px; }
 .graph-indicators > li:last-child                           { border-right: none; }
 .graph-indicators-two > li                                  { width: calc(50% - 2px); }
-.graph-indicators > li > .graph-indicator                   { display: block; width: 20px; height: 20px; margin: 0 auto 5px; border-radius: 50%; }
+.graph-indicator                                            { display: block; width: 20px; height: 20px; margin: 0 auto 5px; border-radius: 50%; }
 .graph-indicator.graph-indicator__excelent                  { background-color: #07C2A7; }
 .graph-indicator.graph-indicator__regular                   { background-color: #FFD200; }
 .graph-indicator.graph-indicator__bad                       { background-color: #E24A4A; }
