@@ -224,7 +224,7 @@ function _onFeature ( feature, drawnLayer ) {
     });
 
     if ( el ) {
-        feature.properties.indicator    = el.color;
+        feature.properties.indicator    = el.vali;
     }
 
     ( function ( layer, feature ) {

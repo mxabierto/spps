@@ -235,17 +235,17 @@ router.post( '/tabla-indicador/', function( req, res ) {
 });
 
 router.post( '/colores', function ( req, res ) {
-    db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, '+
-        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),' +
-        'sum(indicador.valor)) and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) and (meta.anio = avg(indicador.anio)' +
-        ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2' +
+    db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, round( cast ( COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) as numeric ), 2 ) as vali, '+
+        '( select color from meta where id_ficha = avg( indicador.id_ficha ) and min <= COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), ' +
+        'sum( indicador.valor ) ) and max > COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) and ( meta.anio = avg( indicador.anio )' +
+        ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha = $1 and indicador.anio = $2' +
         ' group by entidad.id',[
         req.body.id,
         req.body.anio
-    ]).then(function (data) {
+    ]).then( function ( data ) {
         res.json( data );
-    }).catch(function (error) {
-        console.log(error)
+    }).catch(function ( error ) {
+        console.log( error );
     })
 });
 
