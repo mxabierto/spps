@@ -30,7 +30,6 @@ router.use(flash());
 var bCrypt = require('bcrypt-nodejs');
 var LocalStrategy = require('passport-local').Strategy;
 
-
 passport.use('login', new LocalStrategy({
         passReqToCallback : true
     },
@@ -95,12 +94,10 @@ var isNotAuthenticated = function (req, res, next) {
     res.redirect('/principal');
 };
 
-
 // Generates hash using bCrypt
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
-
 
 /* Handle Login POST */
 router.post('/login', passport.authenticate('login', {
@@ -120,7 +117,6 @@ router.get('/signout', function(req, res) {
 router.get('/', function (req, res) {
     res.render('index', {title: 'MIIPPS', message: req.flash('message') });
 });
-
 
 /* GET bubbles. */
 router.get('/bubbles', function (req, res) {
@@ -158,8 +154,7 @@ router.get('/pruebas', function (req, res) {
     });
 });
 
-router.get('/miipps', isAuthenticated, function(req, res, next) {
-
+router.get( '/miipps', isAuthenticated, function( req, res, next ) {
     db.manyOrNone('select * from unidad',[]).then(function ( data ) {
 
         res.render('miipps', { title: 'MIIPPS',unidades: data, section: 'miipps' });
@@ -169,8 +164,7 @@ router.get('/miipps', isAuthenticated, function(req, res, next) {
     });
 });
 
-
-router.post('/select-pae/', function (req,res ) {
+router.post( '/select-pae/', function ( req,res ) {
     var unidad = req.body.unidad;
     console.log(unidad);
     db.manyOrNone('select * from pae where unidad = $1',[unidad]).then(function (data) {
@@ -180,8 +174,7 @@ router.post('/select-pae/', function (req,res ) {
     })
 });
 
-
-router.post('/select-ficha/',function (req, res) {
+router.post( '/select-ficha/',function ( req, res) {
     var id_pae = req.body.id_pae;
     console.log('id_pae ', id_pae);
 
@@ -194,142 +187,77 @@ router.post('/select-ficha/',function (req, res) {
 
 });
 
+router.post( '/ficha/', function ( req, res ) {
+    var id_ficha    = req.body.id_ficha;
 
-router.post('/ficha/', function (req, res ) {
-    var id_ficha = req.body.id_ficha;
-
-    if (id_ficha != '' && id_ficha != null) {
-        db.oneOrNone('select * from ficha where id = $1', [ id_ficha ]).then(function (data) {
-            if (data) {
-                res.render('ficha', {ficha: data});
-            }else{
-                res.send('<strong>Seleccione un indicador</strong>');
+    if ( id_ficha != '' && id_ficha != null ) {
+        db.oneOrNone( 'select * from ficha where id = $1', [ id_ficha ]).then(function ( data ) {
+            if ( data ) {
+                res.render( 'ficha', {
+                    ficha   : data
+                });
+            } else {
+                res.send( '<strong>Seleccione un indicador</strong>' );
             }
-        }).catch(function (error) {
-            console.log(error);
+        }).catch(function ( error ) {
+            console.log( error );
         });
-    }else {
-        res.send('<strong>Seleccione un indicador</strong>');
+    } else {
+        res.send( '<strong>Seleccione un indicador</strong>' );
     }
 });
-/*Desglose de valores estatales a partir de datos municipales, jurisdicccionales o estatales */
-/*Falta limitar indicador.anio....indicador.anio=2015 estaba, pero solo hay un año*/
-router.post('/tabla-indicador/', function(req, res){
-    var id_ficha = req.body.id_ficha;
-    if (id_ficha != '' && id_ficha != null ) {
-        db.manyOrNone ('select round(avg(indicador.anio)) as anii, sum(indicador.numerador) as numi, sum(indicador.denominador) as deni,' +
-            'round(cast(COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))as numeric),2) as vali,' +
-            ' entidad.nombre, (select color from meta where ' +
-            'id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor))' +
-            ' and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) ' +
-            'and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and ' +
-            ' id_ficha= $1 and indicador.anio=2015 group by entidad.nombre order by entidad.nombre',[        id_ficha       ]).then(function(data){
-            if (data.length){
-                res.render('tabla_indicador', { datos: data }  );
-            }else{
-                res.send('<strong>Seleccione un indicador</strong>');
+
+router.post( '/tabla-indicador/', function( req, res ) {
+    var id_ficha    = req.body.id_ficha,
+        year        = req.body.year;
+
+    if ( id_ficha != '' && id_ficha != null && year != '' && year != null ) {
+        db.manyOrNone ( 'select round( avg( indicador.anio ) ) as anii, sum( indicador.numerador ) as numi, sum( indicador.denominador ) as deni,' +
+            'round( cast ( COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) as numeric ), 2 ) as vali,' +
+            ' entidad.nombre, ( select color from meta where ' +
+            'id_ficha = avg( indicador.id_ficha ) and min <= COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) )' +
+            ' and max > COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) ' +
+            'and ( meta.anio = avg( indicador.anio ) or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and ' +
+            ' id_ficha= $1 and indicador.anio = $2 group by entidad.nombre order by entidad.nombre', [ id_ficha, year ]).then( function( data ){
+            if ( data.length ){
+                res.render( 'tabla_indicador', {
+                    datos   : data
+                });
+            } else {
+                res.send( '<strong>Seleccione un indicador</strong>' );
             }
-        }).catch(function(error){
-            console.log(error);
+        }).catch( function( error ){
+            console.log( error );
         });
-    }else {
-        res.send('<strong>Seleccione un indicador</strong>');
+    } else {
+        res.send( '<strong>Seleccione un indicador</strong>' );
     }
-
 });
-/*Pinta Estados a partir de cualquier desagregado */
-/*Cálculo de datos estatales con el método 100*num/den  */
-router.post('/colores', function (req, res) {
-    console.log('colores ',req.body.id);
 
-    db.manyOrNone ('select entidad.id, '+
-        '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),' +
-        'sum(indicador.valor)) and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) and (meta.anio = avg(indicador.anio)' +
-        ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2' +
+router.post( '/colores', function ( req, res ) {
+    db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, round( cast ( COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) as numeric ), 2 ) as vali, '+
+        '( select color from meta where id_ficha = avg( indicador.id_ficha ) and min <= COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), ' +
+        'sum( indicador.valor ) ) and max > COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) and ( meta.anio = avg( indicador.anio )' +
+        ' or meta.anio is null ) ) as color from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha = $1 and indicador.anio = $2' +
         ' group by entidad.id',[
         req.body.id,
         req.body.anio
-    ]).then(function (data) {
-        console.log(data);
-        res.json(data);
-    }).catch(function (error) {
-        console.log(error)
+    ]).then( function ( data ) {
+        res.json( data );
+    }).catch(function ( error ) {
+        console.log( error );
     })
-
-
 });
 
-/*Pintar municipios desde desagregado municipal*/
-/*
-router.post('/colores', function (req, res) {
- console.log('colores ',req.body.id);
-
- db.manyOrNone ('select (indicador.entidad*1000+indicador.id_municipio) as id, '+
- '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
- 'indicador.anio from indicador where indicador.id_ficha= $1 and indicador.anio = $2 ',[
- req.body.id,
- req.body.anio
- ]).then(function (data) {
- console.log(data);
- res.json(data);
- }).catch(function (error) {
- console.log(error)
- })
-
- });*/
-
-/*Pintar jurisdicciones desde desagregado municipal o jurisdiccional*/
-/*
- router.post('/colores', function (req, res) {
- console.log('colores ',req.body.id);
-
- db.manyOrNone ('select (indicador.entidad*100+indicador.cve_jurisdiccion) as id, '+
- '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= 100*sum(indicador.numerador)/sum(indicador.denominador) and max > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
- 'avg(indicador.anio) from indicador where indicador.id_ficha= $1 and indicador.anio = $2 group by indicador.entidad,indicador.cve_jurisdiccion',[
- req.body.id,
- req.body.anio
- ]).then(function (data) {
- console.log(data);
- res.json(data);
- }).catch(function (error) {
- console.log(error)
- })
-
- });*/
-
-/*Pintar estados solo desde desagregado estatal */
-/*
-router.post('/colores', function (req, res) {
-    console.log('colores ',req.body.id);
-
-    db.manyOrNone ('select entidad.id, '+
-    '(select color from meta where id_ficha = indicador.id_ficha  and min <= indicador.valor and max > indicador.valor and (meta.anio = indicador.anio or meta.anio is null ) ) as color,'+
-        'indicador.anio from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2',[
-            req.body.id,
-            req.body.anio
-    ]).then(function (data) {
-        console.log(data);
-        res.json(data);
-    }).catch(function (error) {
-        console.log(error)
-    })
-
-
-});*/
-
-
-router.post('/anios',function (req, res) {
-    db.manyOrNone('select distinct(anio) from indicador where id_ficha = $1 order by anio', [ req.body.id ]).then(function ( data ) {
+router.post( '/anios', function ( req, res ) {
+    db.manyOrNone('SELECT DISTINCT(anio) FROM indicador WHERE id_ficha = $1 ORDER BY anio', [ req.body.id ]).then(function ( data ) {
         res.render('anios', {anios: data, id_ficha: req.body.id  });
     }).catch(function (error) {
         console.log(error);
     });
-
-
 });
 
-
-router.get('/captura', isAuthenticated, function (req, res) {
+router.get( '/captura', isAuthenticated, function (req, res) {
 
     db.task(function (t) {
        return this.batch([
@@ -350,8 +278,7 @@ router.get('/captura', isAuthenticated, function (req, res) {
 
 });
 
-
-router.post('/indicador', isAuthenticated, function (req, res) {
+router.post( '/indicador', isAuthenticated, function (req, res) {
     console.log(req.body);
 
     db.one('select * from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
@@ -374,7 +301,7 @@ router.post('/indicador', isAuthenticated, function (req, res) {
     });
 });
 
-router.post('/captura/guardar', isAuthenticated,function ( req, res) {
+router.post( '/captura/guardar', isAuthenticated,function ( req, res) {
     console.log(req.body);
     db.task(function(t){
         return t.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
@@ -421,22 +348,16 @@ router.post('/captura/guardar', isAuthenticated,function ( req, res) {
 
 });
 
-router.get('/miipps/159/:id/:anio',function(req,res){
-    /*Las líneas siguientes (comentadas) muestran cómo pasar arreglos para la gráfica*/
-    /*res.json([{'entidad':'AGS','valor':6.54},
-        {'entidad':'BC','valor':4.42},
-        {'entidad':'BCS','valor':4.31}])*/
-
-    db.manyOrNone ('select entidad.abrevia as entidad, 100*sum(indicador.numerador)/sum(indicador.denominador) as valor'+
-        ' from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+router.get( '/miipps/:id/:anio', function( req,res ) {
+    db.manyOrNone ('select entidad.abrevia as entidad, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor '+
+        'from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id', [
         req.params.id,
         req.params.anio
-    ]).then(function (data) {
-        console.log(data);
-        res.json(data);
-    }).catch(function (error) {
-        console.log(error)
-    })
+    ]).then( function ( data ) {
+        res.json( data );
+    }).catch( function ( error ) {
+        console.log( error );
+    });
 });
 
 module.exports = router;

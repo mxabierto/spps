@@ -46,7 +46,29 @@
         <td><%= datos[i].numi%></td>
         <td><%= datos[i].deni%></td>
         <td><%= datos[i].vali%></td>
-        <td> <img src=<%- color(datos[i].color)%> width="48px"> </td>
+        <td>
+            <% if ( datos[i].color == 3 ) { %>
+                <span class="graph-indicator graph-indicator__excelent"></span>
+            <% } %>
+            <% if ( datos[i].color == 2 ) { %>
+                <span class="graph-indicator graph-indicator__regular"></span>
+            <% } %>
+            <% if ( datos[i].color == 1 ) { %>
+                <span class="graph-indicator graph-indicator__bad"></span>
+            <% } %>
+            <% if ( datos[i].color === 0 ) { %>
+                <span class="graph-indicator graph-indicator__insufficient"></span>
+            <% } %>
+            <% if ( datos[i].color == 4 ) { %>
+                <span class="graph-indicator graph-indicator__under"></span>
+            <% } %>
+            <% if ( datos[i].color == 5 ) { %>
+                <span class="graph-indicator graph-indicator__fulfillment"></span>
+            <% } %>
+            <% if ( datos[i].color === undefined ) { %>
+                <span class="graph-indicator graph-indicator__no-data"></span>
+            <% } %>
+        </td>
     </tr>
     <%}%>
 
