@@ -235,8 +235,6 @@ router.post( '/tabla-indicador/', function( req, res ) {
 });
 
 router.post( '/colores', function ( req, res ) {
-    console.log('colores ',req.body.id);
-
     db.manyOrNone ('select entidad.id, entidad.nombre, entidad.abrevia, '+
         '(select color from meta where id_ficha = avg(indicador.id_ficha)  and min <= COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),' +
         'sum(indicador.valor)) and max >COALESCE(100*sum(indicador.numerador)/sum(indicador.denominador),sum(indicador.valor)) and (meta.anio = avg(indicador.anio)' +
@@ -245,8 +243,7 @@ router.post( '/colores', function ( req, res ) {
         req.body.id,
         req.body.anio
     ]).then(function (data) {
-        console.log(data);
-        res.json(data);
+        res.json( data );
     }).catch(function (error) {
         console.log(error)
     })
@@ -260,7 +257,7 @@ router.post( '/anios', function ( req, res ) {
     });
 });
 
-router.get('/captura', isAuthenticated, function (req, res) {
+router.get( '/captura', isAuthenticated, function (req, res) {
 
     db.task(function (t) {
        return this.batch([
@@ -281,7 +278,7 @@ router.get('/captura', isAuthenticated, function (req, res) {
 
 });
 
-router.post('/indicador', isAuthenticated, function (req, res) {
+router.post( '/indicador', isAuthenticated, function (req, res) {
     console.log(req.body);
 
     db.one('select * from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
@@ -304,7 +301,7 @@ router.post('/indicador', isAuthenticated, function (req, res) {
     });
 });
 
-router.post('/captura/guardar', isAuthenticated,function ( req, res) {
+router.post( '/captura/guardar', isAuthenticated,function ( req, res) {
     console.log(req.body);
     db.task(function(t){
         return t.one('select count(*) as count from indicador where id_ficha = $1 and entidad = $2 and anio = $3', [
@@ -351,22 +348,16 @@ router.post('/captura/guardar', isAuthenticated,function ( req, res) {
 
 });
 
-router.get('/miipps/159/:id/:anio',function(req,res){
-    /*Las líneas siguientes (comentadas) muestran cómo pasar arreglos para la gráfica*/
-    /*res.json([{'entidad':'AGS','valor':6.54},
-        {'entidad':'BC','valor':4.42},
-        {'entidad':'BCS','valor':4.31}])*/
-
-    db.manyOrNone ('select entidad.abrevia as entidad, 100*sum(indicador.numerador)/sum(indicador.denominador) as valor'+
-        ' from indicador, entidad where  indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id',[
+router.get( '/miipps/:id/:anio', function( req,res ) {
+    db.manyOrNone ('select entidad.abrevia as entidad, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor '+
+        'from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id', [
         req.params.id,
         req.params.anio
-    ]).then(function (data) {
-        console.log(data);
-        res.json(data);
-    }).catch(function (error) {
-        console.log(error)
-    })
+    ]).then( function ( data ) {
+        res.json( data );
+    }).catch( function ( error ) {
+        console.log( error );
+    });
 });
 
 module.exports = router;

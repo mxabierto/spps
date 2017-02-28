@@ -58,12 +58,127 @@ function _loadIndicatorData () {
         id_ficha    : select_indicador.val(),
         year        : selected_year
     });
+
+    _setBarChart( select_indicador.val() );
 }
 
 function _paeSelected () {
     select_indicador.load( '/select-ficha', {
         id_pae  : select_pae.val()
     }, _setPagination );
+}
+
+function _setBarChart ( id_ficha ) {
+    var margin  = {
+            top     : 20,
+            right   : 20,
+            bottom  : 30,
+            left    : 40
+        },
+        width   = 1000 - margin.left - margin.right,
+        height  = 500 - margin.top - margin.bottom;
+
+    var x       = d3.scale.ordinal()
+        .rangeRoundBands( [0, width], .1, 1 );
+
+    var y       = d3.scale.linear()
+        .range( [height, 0] );
+
+    var xAxis   = d3.svg.axis()
+        .scale( x )
+        .orient( "bottom" );
+
+    var yAxis   = d3.svg.axis()
+        .scale( y )
+        .orient( "left" );
+
+    var current = $( '#g1 svg' );
+    if ( current.length ) {
+        current.remove();
+    }
+
+    var svg     = d3.select( "#g1" ).append( "svg" )
+        .attr( "width", width + margin.left + margin.right )
+        .attr( "height", height + margin.top + margin.bottom )
+        .append( "g" )
+        .attr( "transform", "translate(" +  margin.left + "," + margin.top + ")");
+
+    var url     = '/miipps/' + id_ficha +'/' + selected_year;
+
+    d3.json( url, function ( error, data ) {
+        data.forEach(function( d ) {
+            d.valor = +d.valor;
+        });
+
+        x.domain( data.map( function ( d ) {
+            return d.entidad;
+        }));
+        y.domain( [0, d3.max( data, function ( d ) {
+            return d.valor;
+        })]);
+
+        svg.append( "g" )
+            .attr( "class", "x axis")
+            .attr( "transform", "translate(0," + height + ")" )
+            .call( xAxis );
+
+        svg.append( "g" )
+            .attr( "class", "y axis" )
+            .call( yAxis )
+            .append( "text" )
+            .attr( "transform", "rotate( -90 )" )
+            .attr( "y", 6 )
+            .attr( "dy", ".71em" )
+            .style( "text-anchor", "end" )
+            .text( "Desempeño" );
+
+        svg.selectAll( ".bar" )
+            .data( data )
+            .enter().append( "rect" )
+            .attr( "class", "bar" )
+            .attr( "x", function( d ) {
+                return x( d.entidad );
+            })
+            .attr( "width", x.rangeBand() )
+            .attr( "y", function( d ) {
+                return y( d.valor );
+            })
+            .attr( "height", function( d ) {
+                return height - y(d.valor);
+            });
+
+        d3.select( "input" ).on( "change", change );
+
+        var sortTimeout = setTimeout( function() {
+            d3.select( "input" ).property( "checked", true ).each( change );
+        }, 2000);
+
+        function change() {
+            clearTimeout(sortTimeout);
+
+            // Copy-on-write since tweens are evaluated after a delay.
+            var x0 = x.domain(data.sort(this.checked
+                ? function(a, b) { return a.valor - b.valor; }
+                : function(a, b) { return d3.ascending(a.entidad, b.entidad); })
+                .map(function(d) { return d.entidad; }))
+                .copy();
+
+            svg.selectAll(".bar")
+                .sort(function(a, b) { return x0(a.entidad) - x0(b.entidad); });
+
+            var transition = svg.transition().duration(750),
+                delay = function(d, i) { return i * 50; };
+
+            transition.selectAll(".bar")
+                .delay(delay)
+                .attr("x", function(d) { return x0(d.entidad); });
+
+            transition.select(".x.axis")
+                .call(xAxis)
+                .selectAll("g")
+                .delay(delay);
+        }
+    });
 }
 
 function _setPagination () {
