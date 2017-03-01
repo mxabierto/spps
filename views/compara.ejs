@@ -78,8 +78,8 @@
 
             // Define the line
             var priceline = d3.line()
-                .x(function(d) { return x(d.date); })
-                .y(function(d) { return y(d.price); });
+                .x(function(d) { return x(d.anio); })
+                .y(function(d) { return y(d.valor); });
 
             // Adds the svg canvas
             var svg = d3.select("#lines")
@@ -93,17 +93,17 @@
             // Get the data
             d3.csv('/tiempo159.csv', function(error, data) {
                 data.forEach(function(d) {
-                    d.date = parseDate(d.date);
-                    d.price = +d.price;
+                    d.anio = parseDate(d.anio);
+                    d.valor = +d.valor;
                 });
 
                 // Scale the range of the data
-                x.domain(d3.extent(data, function(d) { return d.date; }));
-                y.domain([0, d3.max(data, function(d) { return d.price; })]);
+                x.domain(d3.extent(data, function(d) { return d.anio; }));
+                y.domain([0, d3.max(data, function(d) { return d.valor; })]);
 
-                // Nest the entries by symbol
+                // Nest the entries by entidad
                 var dataNest = d3.nest()
-                    .key(function(d) {return d.symbol;})
+                    .key(function(d) {return d.entidad;})
                     .entries(data);
 
                 // set the colour scale
@@ -111,7 +111,7 @@
 
                 legendSpace = width/dataNest.length; // spacing for the legend
 
-                // Loop through each symbol / key
+                // Loop through each entidad / key
                 dataNest.forEach(function(d,i) {
 
                     svg.append("path")
