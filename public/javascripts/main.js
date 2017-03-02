@@ -300,8 +300,8 @@ function main() {
         maxZoom         : 7,
         scrollWheelZoom : false
     }).setView( [ 24.127, -102 ], 5 );
-    L.tileLayer( 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-        attribution     : 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+    L.tileLayer( 'http://{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png', {
+        attribution     : 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo( map );
 
     // Select the first item in the `Unidad Administrativa` dropdown
