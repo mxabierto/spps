@@ -61,6 +61,9 @@ function _loadIndicatorData () {
         year        : selected_year
     });
 
+    $( '#indicators-table__container' ).slideUp();
+    $( '.btn-see-all' ).fadeIn();
+    $( '.btn-hide-all' ).fadeOut();
     _setBarChart( select_indicador.val() );
 }
 
@@ -313,5 +316,25 @@ function main() {
         }
     });
 }
+
+$( '.btn-see-all' ).click( function ( e ) {
+    e.preventDefault();
+
+    $( '#indicators-table__container' ).slideDown();
+    $( '.btn-see-all' ).fadeOut();
+    $( '.btn-hide-all' ).fadeIn();
+
+    return false;
+});
+
+$( '.btn-hide-all' ).click( function ( e ) {
+    e.preventDefault();
+
+    $( '#indicators-table__container' ).slideUp();
+    $( '.btn-see-all' ).fadeIn();
+    $( '.btn-hide-all' ).fadeOut();
+
+    return false;
+});
 
 $( document ).ready( main );

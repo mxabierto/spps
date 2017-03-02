@@ -65,10 +65,17 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
     </head>
-    <body>
+    <body id="indicators-catalog">
         <% include navbar.ejs %>
+        <div class="container-fluid bgimg">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center" id="icono_con"><img src="/img/logo_salud.png" style="width: 300px; padding-top: 75px"></p>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
-            <h1>Monitoreo Integral de Indicadores de Prevención y Promoción de la Salud</h1>
+            <h1>Bienvenido al Catálogo de Indicadores por Programa de Acción Específico 2013-2018</h1>
             <div class="row">
                 <div class="col-sm-4"><!-- Elección de la Unidad Administrativa o Centro-->
                     <label>Selecciona una unidad administrativa</label>
@@ -114,7 +121,7 @@
             </table>
         </div>
         <div class="container-fluid">
-            <h1>Evaluación del desempeño</h1>
+            <h2>Evaluación del desempeño</h2>
             <div class="row">
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <p>Metas sexenales</p>
@@ -155,10 +162,14 @@
                     </ul>
                 </div>
             </div>
-            <h1>Ficha técnica</h1>
+            <h2>Ficha técnica</h2>
             <div id ="ficha"></div>
-            <h1>Indicadores por estado</h1>
-            <div id="tabla_indicador"></div>
+            <button type="button" class="btn btn-primary btn-see-all">Ver tabla</button>
+            <button type="button" class="btn btn-primary btn-hide-all">Ocultar tabla</button>
+            <div id="indicators-table__container">
+                <h2>Indicadores por estado</h2>
+                <div id="tabla_indicador"></div>
+            </div>
         </div>
         <!-- Gráfica de barras-->
         <div class="container-fluid">
