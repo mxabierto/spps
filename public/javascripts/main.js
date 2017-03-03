@@ -249,30 +249,43 @@ function _onFeature ( feature, drawnLayer ) {
         });
 
         layer.on( 'click', function ( e ) {
-            var selected_jurisdictions  = _.filter( jurisdictions.features, function ( f ) {
-                return f.properties.nom_ent == feature.properties.NOM_ENT;
+            $.get( '/jurisdictions', {
+                id      : select_indicador.val(),
+                entity  : parseInt( feature.properties.CVE_ENT ),
+                anio    : selected_year
+            }, function ( data ) {
+                _draw_jurisdictions( data, feature.properties.NOM_ENT, e.latlng );
             });
-
-            if ( geojson_jurisdictions ) {
-                map.removeLayer( geojson_jurisdictions );
-            }
-
-            geojson_jurisdictions   = L.geoJson( selected_jurisdictions, {
-                onEachFeature   : function ( feature, layer ) {
-                    layer.setStyle({
-                        color       : '#ffffff',
-                        opacity     : 1,
-                        weight      : 1,
-                        fillColor   : '#333333',
-                        fillOpacity : 0
-                    });
-                }
-            });
-
-            geojson_jurisdictions.addTo( map );
-            map.setView( [ e.latlng.lat, e.latlng.lng ], 7 );
         });
     })( drawnLayer, feature );
+}
+
+function _draw_jurisdictions ( data, entity, latlng ) {
+    var selected_jurisdictions  = _.filter( jurisdictions.features, function ( f ) {
+        return f.properties.nom_ent == entity;
+    });
+
+    if ( geojson_jurisdictions ) {
+        map.removeLayer( geojson_jurisdictions );
+    }
+
+    geojson_jurisdictions   = L.geoJson( selected_jurisdictions, {
+        onEachFeature   : function ( feature, layer ) {
+            var el  = _.findWhere( data, {
+                id  : feature.properties.clave_juri
+            });
+
+            layer.setStyle({
+                color       : '#ffffff',
+                opacity     : 1,
+                weight      : 1,
+                fillColor   : ( el && el.color !== undefined ) ? color( el.color ) : color( -1 ),
+                fillOpacity : 1
+            });
+        }
+    });
+
+    geojson_jurisdictions.addTo( map );
 }
 
 function draw_states () {

@@ -249,6 +249,20 @@ router.post( '/colores', function ( req, res ) {
     })
 });
 
+router.get( '/jurisdictions', function ( req, res ) {
+    db.manyOrNone ('SELECT (indicador.entidad*100+indicador.cve_jurisdiccion) as id, '+
+        '(SELECT color FROM meta WHERE id_ficha = AVG(indicador.id_ficha) AND MIN <= 100*sum(indicador.numerador)/sum(indicador.denominador) AND MAX > 100*sum(indicador.numerador)/sum(indicador.denominador) and (meta.anio = avg(indicador.anio) or meta.anio is null ) ) as color,'+
+        'avg(indicador.anio) FROM indicador WHERE indicador.id_ficha = $1 and indicador.anio = $2 AND indicador.entidad = $3 group by indicador.entidad, indicador.cve_jurisdiccion',[
+        req.query.id,
+        req.query.anio,
+        req.query.entity
+    ]).then( function ( data ) {
+        res.json( data );
+    }).catch( function ( error ) {
+        console.log( error );
+    });
+});
+
 router.post( '/anios', function ( req, res ) {
     db.manyOrNone('SELECT DISTINCT(anio) FROM indicador WHERE id_ficha = $1 ORDER BY anio', [ req.body.id ]).then(function ( data ) {
         res.render('anios', {anios: data, id_ficha: req.body.id  });
