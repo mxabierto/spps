@@ -68,6 +68,7 @@ function _loadIndicatorData () {
     $( '.btn-see-all' ).fadeIn();
     $( '.btn-hide-all' ).fadeOut();
     _setBarChart( select_indicador.val() );
+    _setLineChart( select_indicador.val() );
 
     if ( indicator == 159 ) {
         $( '#dashboard-container' ).fadeIn();
@@ -196,6 +197,116 @@ function _setBarChart ( id_ficha ) {
                 .selectAll("g")
                 .delay(delay);
         }
+    });
+}
+
+function _setLineChart ( id_ficha ) {
+    // Set the dimensions of the canvas / graph
+    var margin  = {
+            top     : 30,
+            right   : 20,
+            bottom  : 50,
+            left    : 50
+        },
+        width   = 1000 - margin.left - margin.right,
+        height  = 500 - margin.top - margin.bottom;
+
+    // Parse the date / time
+   var  parseDate   = d3.time.format( "%Y" ).parse;
+
+    // Set the ranges
+    var x           = d3.time.scale().range( [0, width] );
+    var y           = d3.scale.linear().range( [height, 0] );
+
+    // Define the axes
+    var xAxis       = d3.svg.axis().scale( x )
+        .orient( "bottom" );
+ 
+    var yAxis       = d3.svg.axis().scale( y )
+        .orient( "left" ).ticks( 5 );
+
+    // Define the line
+    var priceline   = d3.svg.line()
+        .x( function ( d ) {
+            return x( d.anio );
+        })
+        .y( function ( d ) {
+            return y( d.valor );
+        });
+
+    var current = $( '#lines svg' );
+    if ( current.length ) {
+        current.remove();
+    }
+
+    // Adds the svg canvas
+    var svg         = d3.select( "#lines" )
+        .append( "svg" )
+            .attr( "width", width + margin.left + margin.right )
+            .attr( "height", height + margin.top + margin.bottom )
+        .append( "g" )
+            .attr( "transform", "translate(" + margin.left + "," + margin.top + ")" );
+
+    // Get the data
+    d3.json( '/miipps/' + id_ficha, function( error, data ) {
+        var years       = _.countBy( data, 'anio' );
+        // Nest the entries by entidad
+        var dataNest    = d3.nest()
+            .key( function( d ) {
+                return d.entidad;
+            })
+            .entries( data );
+
+        _.each( dataNest, function ( d ) {
+            if ( d.values.length != years.length ) {
+                for ( var key in years ) {
+                    if ( !_.findWhere( d.values, { anio : parseInt( key ) } ) ) {
+                        d.values.push({
+                            anio    : key,
+                            entidad : parseInt( d.key ),
+                            valor   : 0
+                        });
+                    }
+                }
+            }
+
+            d.values    = _.sortBy( d.values, 'anio' );
+        });
+
+        var color       = d3.scale.category10();
+
+        data.forEach( function ( d ) {
+            d.anio  = d.anio;
+            d.valor = +d.valor;
+        });
+
+        // Scale the range of the data
+        x.domain( d3.extent( data, function ( d ) {
+            return d.anio;
+        }));
+        y.domain( [0, d3.max( data, function ( d ) {
+            return d.valor;
+        })]);
+
+        dataNest.forEach( function ( d, i ) {
+            svg.append( "path" )
+                .attr( "class", "line" )
+                .style( "stroke", function() {
+                    return d.color = color( d.key );
+                })
+                .attr( "d", priceline( d.values ) );
+        });
+
+        // Add the X Axis
+        svg.append( "g" )
+            .attr( "class", "x axis" )
+            .attr( "transform", "translate(0," + height + ")" )
+            .call( xAxis );
+
+        // Add the Y Axis
+        svg.append( "g" )
+            .attr( "class", "y axis" )
+            .call( yAxis );
     });
 }
 

@@ -59,6 +59,10 @@
                 min-height: 250px;
                 background-position: center;
             }
+
+            #lines path { stroke: steelblue; stroke-width: 3; fill: none; }
+            #lines .axis path,
+            #lines .axis line { fill: none; stroke: grey; stroke-width: 1; shape-rendering: crispEdges; }
         </style>
 
         <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
@@ -176,6 +180,13 @@
             <h1>Gráficos</h1>
             <input type="checkbox"> Ordenar <br>
             <div id="g1"></div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div id="lines"></div>
+                </div>
+            </div>
         </div>
         <div id="dashboard-container" class="container-fluid">
             <h1>Recién nacidos con bajo peso</h1>

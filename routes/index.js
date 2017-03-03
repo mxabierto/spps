@@ -362,6 +362,17 @@ router.post( '/captura/guardar', isAuthenticated,function ( req, res) {
 
 });
 
+router.get( '/miipps/:id', function( req,res ) {
+    db.manyOrNone ('select entidad.id as entidad, indicador.anio as anio, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor '+
+        'from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 GROUP BY entidad.id, indicador.anio', [
+        req.params.id
+    ]).then( function ( data ) {
+        res.json( data );
+    }).catch( function ( error ) {
+        console.log( error );
+    });
+});
+
 router.get( '/miipps/:id/:anio', function( req,res ) {
     db.manyOrNone ('select entidad.abrevia as entidad, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor '+
         'from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id', [
