@@ -36,8 +36,6 @@ p.small                                     { font-size: 11px; }
 .scrolloff                                  { pointer-events: none; }
 .bg-container                               { position: relative; }
 .bg-container .bg                           { background-color: #474747; position: absolute; left: 0; top: 0; bottom: 0; right: 75.9%; }
-h1                                          { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #d8d8d8; position: relative; font-size: 24px; font-weight: 600; color: #545454; }
-h1:after                                    { content: ''; width: 40px; position: absolute; bottom: -6px; left: 0; border-bottom: solid 5px #0c9; }
 p.big                                       { margin-bottom: 30px; font-size: 24px; line-height: 42px; }
 .read-more                                  { font-size: 11px; }
 .read-more > i                              { margin-left: 0px; }
@@ -97,6 +95,8 @@ p.big                                       { margin-bottom: 30px; font-size: 24
     Pagination Styles
 ********************************/
 .pagination > .active > a,
+.pagination > .active > a:active,
+.pagination > .active > a:visited,
 .pagination > .active > a:hover             { background-color: #0c9; border-color: #0c9; }
 .pagination > li > a                        { color: #0c9; }
 .pagination > li > a:hover                  { color: #0a9; }
@@ -654,6 +654,41 @@ p.cover-image                               { margin-top: 30px; text-align: cent
 /***********************
     Map Visualization
 ***********************/
+.bgimg                          { width: 100%; max-width: 100%; margin-bottom: 0; height: 250px; background-image: url('/img/banner.jpeg'); background-size: cover; }
+.bgimg h2                       { margin-bottom: 30px; }
+.bgimg h2 > span                { display: block; font-weight: 400; }
+
+.panel                          { border:none; }
+.well                           { border: none; }
+
+@media only screen
+and (min-device-width: 300px)
+and (max-device-width: 736px){
+    .bgimg { height: 250px; }
+    .bgimg h2 { font-size: 20px; margin-bottom: 10px}
+    .bgimg h4 { font-size: 12px;}
+    .bgimg .stat { font-size: 16px }
+    .bgimg {background-size: 500px 200px}
+
+
+    .statistics h1 {font-size: 16px;}
+    .statistics p { font-size: 14px;}
+
+    .stages .stages-widget p {font-size: 14px}
+    .stages .stages-widget .content { font-size: 14px; padding-bottom: 25px}
+
+    .stages .stages-widget img {width: 25px}
+    .stages h1 {font-size: 16px}
+
+}
+
+#indicators-catalog h1                                      { margin-bottom: 40px; font-size: 24px; color: #0A254F; text-align: center; }
+#indicators-catalog h2                                      { margin: 40px 0; padding-bottom: 10px; font-size: 18px; font-weight: 600; color: #09254F; text-align: left; border-bottom: 1px solid #09254F; }
+#indicators-catalog .btn-primary                            { padding: 5px 25px; background-color: #00AEEF; font-size: 12px; }
+#ficha .table                                               { border: 1px solid #E0E0E0; border-radius: 5px; }
+#ficha .table > tbody > tr > td                             { padding: 15px 8px; border-bottom: 1px solid #e0e0e0; font-size: 14px; color: #0A254F; vertical-align: middle; }
+#ficha .table > tbody > tr > td > strong                    { font-weight: 400; color: #00AEEF; }
+
 #map-popup                                                  { display: none; width: 180px; background-color: #fff; border-radius: 5px; position: absolute; z-index: 9999; }
 #map-popup .table                                           { margin-bottom: 0; }
 #map-popup .table > tbody > tr > td                         { font-size: 11px; }
