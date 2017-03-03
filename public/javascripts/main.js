@@ -191,7 +191,8 @@ function _setPagination () {
     map_pagination.load( '/anios', {
         id : select_indicador.val()
     }, function () {
-        $( '.pagination' ).find( 'li' ).click( function () {
+        $( '.pagination' ).find( 'li' ).click( function ( e ) {
+            e.preventDefault();
             $( '.pagination li' ).removeClass( 'active' );
             var pag_el  = $( this );
             pag_el.addClass( 'active' );
