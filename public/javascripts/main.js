@@ -212,7 +212,7 @@ function _setLineChart ( id_ficha ) {
         height  = 500 - margin.top - margin.bottom;
 
     // Parse the date / time
-   var  parseDate   = d3.time.format( "%Y" ).parse;
+   //var  parseDate   = d3.time.format( "%Y" ).parse;
 
     // Set the ranges
     var x           = d3.time.scale().range( [0, width] );
@@ -276,7 +276,7 @@ function _setLineChart ( id_ficha ) {
         var color       = d3.scale.category10();
 
         data.forEach( function ( d ) {
-            d.anio  = d.anio;
+            d.anio  = +d.anio;
             d.valor = +d.valor;
         });
 
@@ -346,7 +346,7 @@ function _onFeature ( feature, drawnLayer ) {
 
 
     drawnLayer.setStyle({
-        color       : '#ffffff',
+        color       : '#333333',
         opacity     : 1,
         weight      : 1,
         fillColor   : ( el && el.color !== undefined ) ? color( el.color ) : color( -1 ),
