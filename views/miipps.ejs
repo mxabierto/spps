@@ -10,12 +10,13 @@
         <!-- Bootstrap -->
         <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="/stylesheets/main.css" rel="stylesheet">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
         <![endif]-->
 
         <style>
@@ -58,6 +59,11 @@
                 background-repeat: no-repeat;
                 min-height: 250px;
                 background-position: center;
+            }
+
+            a.export,
+            a.export:visited {
+                color: #ffffff;
             }
 
             #lines path { stroke: steelblue; stroke-width: 3; fill: none; }
@@ -214,9 +220,10 @@
                                 <td>Indicador</td>
                                 <td>SSA</td>
                                 <td>
-                                    <span class="label" data-format="csv"><a href="/pruebas">CSV</a></span>
+                                    <span class="label" data-format="csv"><a href="#" class ="export">CSV</a></span>
                                     <!--<span class="label" data-format="xlsx">XLS</span>-->
                                     <!--<span class="label" data-format="pdf">PDF</span>-->
+                                    <!--<a href="#" class ="export">CSV</a>-->
                                 </td>
                             </tr>
                             </tbody>
@@ -225,6 +232,64 @@
                 </div>
             </div>
         </div>
+
+
+
+        <script>
+            $(document).ready(function () {
+
+                function exportTableToCSV($table, filename) {
+
+                    var $rows = $table.find('tr:has(td)'),
+
+                        // Temporary delimiter characters unlikely to be typed by keyboard
+                        // This is to avoid accidentally splitting the actual contents
+                        tmpColDelim = String.fromCharCode(11), // vertical tab character
+                        tmpRowDelim = String.fromCharCode(0), // null character
+
+                        // actual delimiter characters for CSV format
+                        colDelim = '","',
+                        rowDelim = '"\r\n"',
+
+                        // Grab text from table into CSV formatted string
+                        csv = '"' + $rows.map(function (i, row) {
+                            var $row = $(row),
+                                $cols = $row.find('td');
+
+
+                            return $cols.map(function (j, col) {
+                            var $col = $(col),
+                                text = $col.text();
+
+                            return text.replace(/"/g, '""'); // escape double quotes
+
+                        }).get().join(tmpColDelim);
+
+                    }).get().join(tmpRowDelim)
+                        .split(tmpRowDelim).join(rowDelim)
+                        .split(tmpColDelim).join(colDelim) + '"',
+
+                        // Data URI
+                        csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+                    $(this)
+                        .attr({
+                            'download': filename,
+                            'href': csvData,
+                            'target': '_blank'
+                        });
+                }
+
+                // This must be a hyperlink
+                $(".export").on('click', function (event) {
+                    // CSV
+                    exportTableToCSV.call(this, $('#tabla_indicador>table'), 'Indicador MIIPPS.csv');
+
+                    // IF CSV, don't do event.preventDefault() or return false
+                    // We actually need this to be a typical hyperlink
+                });
+            });
+        </script>
         <script src="//d3js.org/d3.v3.min.js"></script>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="/bower_components/jquery/dist/jquery.min.js"></script>
