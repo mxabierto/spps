@@ -374,8 +374,10 @@ router.get( '/miipps/:id', function( req,res ) {
 });
 
 router.get( '/miipps/:id/:anio', function( req,res ) {
-    db.manyOrNone ('select entidad.abrevia as entidad, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor '+
-        'from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id', [
+    db.manyOrNone ('select entidad.abrevia as entidad, 100 * sum( indicador.numerador ) / sum( indicador.denominador ) as valor, '+
+        '( select color from meta where id_ficha = avg( indicador.id_ficha ) and min <= COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), ' +
+        'sum( indicador.valor ) ) and max > COALESCE( 100 * sum( indicador.numerador ) / sum( indicador.denominador ), sum( indicador.valor ) ) and ( meta.anio = avg( indicador.anio )' +
+        ' or meta.anio is null ) ) as color from indicador, entidad where indicador.entidad = entidad.id and indicador.id_ficha= $1 and indicador.anio = $2 group by entidad.id', [
         req.params.id,
         req.params.anio
     ]).then( function ( data ) {

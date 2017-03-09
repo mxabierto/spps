@@ -125,6 +125,7 @@ function _setBarChart ( id_ficha ) {
     var url     = '/miipps/' + id_ficha +'/' + selected_year;
 
     d3.json( url, function ( error, data ) {
+        console.log( data );
         data.forEach(function( d ) {
             d.valor = +d.valor;
         });
@@ -154,6 +155,9 @@ function _setBarChart ( id_ficha ) {
         svg.selectAll( ".bar" )
             .data( data )
             .enter().append( "rect" )
+            .style( 'fill', function ( d ) {
+                return color( d.color )
+            })
             .attr( "class", "bar" )
             .attr( "x", function( d ) {
                 return x( d.entidad );
