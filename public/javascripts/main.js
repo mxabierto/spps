@@ -291,10 +291,14 @@ function _setLineChart ( id_ficha ) {
         dataNest.forEach( function ( d, i ) {
             svg.append( "path" )
                 .attr( "class", "line" )
-                .style( "stroke", function() {
-                    return d.color = color( d.key );
+                .style( "stroke", "#ddd" )
+                .attr( "d", priceline( d.values ) )
+                .on( "mouseover", function () {
+                    $( this ).attr( "style", "stroke: #ff0000;" );
                 })
-                .attr( "d", priceline( d.values ) );
+                .on( "mouseout", function () {
+                    $( this ).attr( "style", "stroke: #ddd;" );
+                });
         });
 
         // Add the X Axis
